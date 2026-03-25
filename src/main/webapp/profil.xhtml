@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<h:head>
+    <title>Profil - Freelance Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #C47D2B; --primary-light: #F5E6D0;
+            --primary-hover: #a8691e; --dark: #1a1a1a;
+            --text: #2d2d2d; --text-muted: #888;
+            --border: #e8e0d5; --bg: #f7f4ef; --white: #fff;
+            --radius: 18px;
+        }
+        body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); }
+
+        nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 60px; background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .nav-logo { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.6rem; color: var(--primary); text-decoration: none; }
+        .nav-links { display: flex; gap: 36px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text); font-size: 0.95rem; font-weight: 500; }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-actions { display: flex; gap: 12px; }
+        .btn-pnav { background: var(--primary); color: #fff; padding: 11px 24px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; text-decoration: none; }
+        .btn-pnav:hover { background: var(--primary-hover); color: #fff; }
+        .btn-onav { background: var(--white); color: var(--text); border: 1.5px solid #ddd; padding: 11px 24px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; text-decoration: none; }
+        .btn-onav:hover { border-color: var(--primary); color: var(--primary); }
+
+        .breadcrumb { padding: 18px 60px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); }
+        .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 500; }
+
+        .layout { display: flex; gap: 28px; padding: 0 60px 70px; align-items: flex-start; }
+        .main-col { flex: 1; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+        .side-col { width: 290px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; position: sticky; top: 88px; }
+
+        .card { background: var(--white); border-radius: var(--radius); border: 1px solid #eee; overflow: hidden; }
+        .card-p { padding: 28px; }
+        .sec-title { font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+        .sec-icon { width: 30px; height: 30px; background: var(--primary-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+        /* BANNIÈRE */
+        .banner { height: 155px; position: relative; overflow: hidden; background: linear-gradient(135deg, #fdf6ee 0%, #f0e0c4 60%, #e8d0a8 100%); }
+        .banner::before { content: ''; position: absolute; width: 280px; height: 280px; border-radius: 50%; border: 40px solid rgba(196,125,43,0.08); top: -80px; right: -40px; }
+        .banner::after { content: ''; position: absolute; width: 160px; height: 160px; border-radius: 50%; background: rgba(196,125,43,0.07); bottom: -60px; left: 120px; }
+        .banner-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(196,125,43,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(196,125,43,0.07) 1px, transparent 1px); background-size: 32px 32px; }
+        .banner-badge { position: absolute; top: 22px; right: 24px; background: rgba(255,255,255,0.85); backdrop-filter: blur(6px); border: 1px solid rgba(196,125,43,0.2); padding: 8px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+        .banner-badge-dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; }
+        .banner-word { position: absolute; bottom: 16px; left: 28px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 3.5rem; font-weight: 700; color: rgba(196,125,43,0.12); line-height: 1; user-select: none; }
+
+        /* AVATAR */
+        .avatar-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: -46px; margin-bottom: 18px; padding: 0 28px; }
+        .avatar-wrap { position: relative; cursor: pointer; display: inline-block; }
+        .avatar-circle { width: 90px; height: 90px; border-radius: 50%; border: 4px solid var(--white); box-shadow: 0 6px 20px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700; color: var(--white); overflow: hidden; transition: transform 0.2s; }
+        .avatar-wrap:hover .avatar-circle { transform: scale(1.04); }
+        .avatar-img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-hover { position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,0.42); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; gap: 3px; pointer-events: none; }
+        .avatar-wrap:hover .avatar-hover { opacity: 1; }
+        .avatar-hover span { color: #fff; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em; }
+
+        .verified-badge { display: inline-flex; align-items: center; gap: 6px; background: #e8f5e9; color: #2e7d32; padding: 7px 16px; border-radius: 50px; font-size: 0.78rem; font-weight: 700; border: 1px solid #c8e6c9; }
+
+        .hero-info { padding: 0 28px 24px; }
+        .hero-name { font-size: 1.7rem; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+        .hero-role { color: var(--primary); font-size: 1rem; font-weight: 600; margin-bottom: 12px; }
+        .hero-loc { display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px; background: var(--bg); padding: 5px 12px; border-radius: 50px; border: 1px solid var(--border); }
+        .stars-row { display: flex; align-items: center; gap: 4px; margin-bottom: 24px; }
+        .s { color: var(--primary); font-size: 1.05rem; }
+        .se { color: #ddd; font-size: 1.05rem; }
+        .rv { font-weight: 700; color: var(--dark); margin-left: 4px; }
+        .rc { color: var(--text-muted); font-size: 0.82rem; }
+        .stats-bar { display: flex; border-top: 1px solid #f0ebe3; padding-top: 20px; }
+        .stat { flex: 1; text-align: center; padding: 0 8px; border-right: 1px solid #f0ebe3; }
+        .stat:last-child { border-right: none; }
+        .sl { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+        .sv { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
+        .su { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
+
+        .about-txt { color: #555; font-size: 0.93rem; line-height: 1.85; }
+        .skills-wrap { display: flex; flex-wrap: wrap; gap: 10px; }
+        .skill { background: var(--primary-light); color: var(--primary); padding: 8px 18px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; border: 1.5px solid rgba(196,125,43,0.2); transition: all 0.2s; cursor: default; }
+        .skill:hover { background: var(--primary); color: var(--white); transform: translateY(-2px); }
+
+        .port-list { display: flex; flex-direction: column; gap: 14px; }
+        .port-item { background: var(--bg); border-radius: 12px; padding: 18px 20px; border: 1.5px solid var(--border); transition: all 0.2s; display: flex; align-items: flex-start; gap: 16px; }
+        .port-item:hover { border-color: var(--primary); box-shadow: 0 6px 20px rgba(196,125,43,0.1); transform: translateX(4px); }
+        .port-num { width: 36px; height: 36px; background: var(--primary-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--primary); font-size: 0.83rem; flex-shrink: 0; }
+        .port-info h4 { font-size: 0.94rem; font-weight: 700; color: var(--dark); margin-bottom: 5px; }
+        .port-info p { color: var(--text-muted); font-size: 0.83rem; line-height: 1.6; margin-bottom: 8px; }
+        .port-link { color: var(--primary); font-size: 0.82rem; font-weight: 600; text-decoration: none; }
+
+        /* SIDEBAR */
+        .avail-dot-s { display: inline-block; width: 8px; height: 8px; background: #22c55e; border-radius: 50%; margin-right: 6px; }
+        .avail-lbl { font-size: 0.77rem; color: var(--text-muted); margin-bottom: 8px; }
+        .avail-status { font-size: 0.96rem; font-weight: 700; color: var(--dark); margin-bottom: 18px; }
+
+        .btn-msg { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px; background: var(--primary); color: var(--white); border: none; border-radius: 12px; font-size: 0.91rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; margin-bottom: 10px; box-shadow: 0 4px 14px rgba(196,125,43,0.3); }
+        .btn-msg:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn-inv { display: block; width: 100%; padding: 12px; background: var(--white); color: var(--dark); border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.91rem; font-weight: 600; text-align: center; text-decoration: none; transition: all 0.2s; }
+        .btn-inv:hover { border-color: var(--primary); color: var(--primary); }
+
+        .info-list { display: flex; flex-direction: column; gap: 14px; }
+        .info-row { display: flex; align-items: center; gap: 12px; }
+        .info-ico { width: 36px; height: 36px; background: var(--primary-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .il { font-size: 0.71rem; color: var(--text-muted); margin-bottom: 1px; }
+        .iv { font-size: 0.87rem; font-weight: 600; color: var(--dark); word-break: break-all; }
+
+        .lang-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+        .lang { background: var(--bg); border: 1.5px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 50px; font-size: 0.82rem; font-weight: 500; }
+
+        /* ══ MODAL SEND MESSAGE ══ */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.45); z-index: 500;
+            align-items: center; justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--white); border-radius: 20px;
+            width: 100%; max-width: 540px; padding: 36px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.15);
+            animation: slideUp 0.25s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+        .modal-title { font-size: 1.25rem; font-weight: 800; color: var(--dark); }
+        .modal-close { background: none; border: none; cursor: pointer; color: var(--text-muted); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; font-size: 1.2rem; }
+        .modal-close:hover { background: #f0f0f0; color: var(--dark); }
+
+        .modal-field { margin-bottom: 20px; }
+        .modal-label { display: block; font-size: 0.88rem; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
+        .modal-input {
+            width: 100%; padding: 13px 16px;
+            border: 1.5px solid var(--border); border-radius: 12px;
+            font-size: 0.92rem; font-family: 'Inter', sans-serif;
+            outline: none; transition: border-color 0.2s; color: var(--text);
+            background: var(--white);
+        }
+        .modal-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(196,125,43,0.1); }
+        .modal-input::placeholder { color: #bbb; }
+        textarea.modal-input { resize: vertical; min-height: 120px; line-height: 1.6; }
+
+        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px; }
+        .btn-cancel { padding: 12px 24px; background: var(--white); color: var(--text); border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.92rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+        .btn-cancel:hover { border-color: var(--text-muted); }
+        .btn-send { display: flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--primary); color: var(--white); border: none; border-radius: 12px; font-size: 0.92rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 14px rgba(196,125,43,0.3); }
+        .btn-send:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #1a1a1a; color: #fff; padding: 14px 22px; border-radius: 12px; font-size: 0.88rem; font-weight: 500; display: none; align-items: center; gap: 10px; z-index: 999; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        .toast.show { display: flex; animation: fadeIn 0.3s ease; }
+        .toast-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; flex-shrink: 0; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+        .footer { background: #1a1a1a; color: #666; text-align: center; padding: 20px; font-size: 0.82rem; }
+    </style>
+</h:head>
+
+<h:body>
+    <f:metadata>
+        <f:viewParam name="id" value="#{profilBean.userId}"/>
+        <f:viewAction action="#{profilBean.loadUser}"/>
+    </f:metadata>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.xhtml" class="nav-logo">Freelance</a>
+        <ul class="nav-links">
+            <li><a href="index.xhtml">Home</a></li>
+            <li><a href="categories.xhtml">Categories</a></li>
+            <li><a href="jobs.xhtml">Jobs</a></li>
+            <li><a href="#">About</a></li>
+        </ul>
+        <div class="nav-actions">
+            <a href="creerPoste.xhtml" class="btn-pnav">Post a Project</a>
+            <a href="dashboard.xhtml"  class="btn-onav">Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="breadcrumb">
+        <a href="index.xhtml">Home</a> <span>›</span>
+        <a href="categories.xhtml">Freelancers</a> <span>›</span>
+        <span>#{profilBean.user.nom}</span>
+    </div>
+
+    <div class="layout">
+        <div class="main-col">
+
+            <!-- HERO CARD -->
+            <div class="card">
+                <div class="banner">
+                    <div class="banner-grid"></div>
+                    <div class="banner-word">Freelance</div>
+                    <div class="banner-badge">
+                        <div class="banner-badge-dot"></div>
+                        Open to work
+                    </div>
+                </div>
+
+                <div class="avatar-row">
+                    <div class="avatar-wrap" onclick="document.getElementById('fileInput').click()">
+                        <div class="avatar-circle" style="background: #{profilBean.avatarColor};">
+                            <h:graphicImage value="/#{profilBean.user.photo}"
+                                            styleClass="avatar-img"
+                                            rendered="#{not empty profilBean.user.photo}"/>
+                            <span id="avatarInitials"
+                                  style="#{not empty profilBean.user.photo ? 'display:none' : ''}">
+                                #{profilBean.initials}
+                            </span>
+                        </div>
+                        <div class="avatar-hover">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                                <circle cx="12" cy="13" r="4"/>
+                            </svg>
+                            <span>CHANGE PHOTO</span>
+                        </div>
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*" style="display:none"
+                           onchange="uploadPhoto(this, #{profilBean.user.id})"/>
+
+                    <div class="verified-badge">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Verified Profile
+                    </div>
+                </div>
+
+                <div class="hero-info">
+                    <div class="hero-name">#{profilBean.user.nom}</div>
+                    <div class="hero-role">#{profilBean.user.domaine}</div>
+                    <div class="hero-loc">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        Remote · Worldwide
+                    </div>
+                    <div class="stars-row">
+                        <span class="s">★</span><span class="s">★</span><span class="s">★</span>
+                        <span class="s">★</span><span class="se">★</span>
+                        <span class="rv">4.8</span>
+                        <span class="rc">(42 reviews)</span>
+                    </div>
+                    <div class="stats-bar">
+                        <div class="stat"><div class="sl">Hourly Rate</div><div class="sv">$85<span class="su">/hr</span></div></div>
+                        <div class="stat"><div class="sl">Completed</div><div class="sv">--</div></div>
+                        <div class="stat"><div class="sl">Success Rate</div><div class="sv">98<span class="su">%</span></div></div>
+                        <div class="stat"><div class="sl">Response</div><div class="sv">2<span class="su">h</span></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABOUT -->
+            <div class="card"><div class="card-p">
+                <div class="sec-title">
+                    <div class="sec-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                    </div>
+                    About Me
+                </div>
+                <div class="about-txt">
+                    <h:outputText value="#{profilBean.user.bio}" rendered="#{not empty profilBean.user.bio}"/>
+                    <h:outputText value="Experienced professional ready to bring your vision to life with high quality and attention to detail." rendered="#{empty profilBean.user.bio}"/>
+                </div>
+            </div></div>
+
+            <!-- SKILLS -->
+            <div class="card"><div class="card-p">
+                <div class="sec-title">
+                    <div class="sec-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2">
+                            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                        </svg>
+                    </div>
+                    Skills &amp; Expertise
+                </div>
+                <div class="skills-wrap">
+                    <ui:repeat value="#{profilBean.user.competences}" var="comp">
+                        <span class="skill">#{comp}</span>
+                    </ui:repeat>
+                    <h:panelGroup rendered="#{empty profilBean.user.competences}">
+                        <span style="color:#aaa;font-size:.88rem;">No skills listed yet.</span>
+                    </h:panelGroup>
+                </div>
+            </div></div>
+
+            <!-- PORTFOLIO -->
+            <div class="card"><div class="card-p">
+                <div class="sec-title">
+                    <div class="sec-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
+                        </svg>
+                    </div>
+                    Portfolio
+                </div>
+                <div class="port-list">
+                    <div class="port-item"><div class="port-num">01</div><div class="port-info"><h4>E-commerce Platform</h4><p>Complete e-commerce platform with payment integration and real-time inventory management.</p><a href="#" class="port-link">View Project →</a></div></div>
+                    <div class="port-item"><div class="port-num">02</div><div class="port-info"><h4>Analytics Dashboard</h4><p>Real-time analytics dashboard with advanced data visualization and reporting tools.</p><a href="#" class="port-link">View Project →</a></div></div>
+                    <div class="port-item"><div class="port-num">03</div><div class="port-info"><h4>SaaS Application</h4><p>Multi-tenant SaaS application with advanced features and scalable cloud architecture.</p><a href="#" class="port-link">View Project →</a></div></div>
+                </div>
+            </div></div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="side-col">
+            <div class="card"><div class="card-p">
+                <div class="avail-lbl"><span class="avail-dot-s"></span>Availability</div>
+                <div class="avail-status">Available for full-time projects</div>
+
+                <!-- Bouton ouvre le modal -->
+                <button class="btn-msg" onclick="openMessageModal()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                    </svg>
+                    Send Message
+                </button>
+                <a href="jobs.xhtml" class="btn-inv">Invite to Project</a>
+            </div></div>
+
+            <div class="card"><div class="card-p">
+                <div class="sec-title" style="font-size:.92rem;margin-bottom:16px;">Profile Info</div>
+                <div class="info-list">
+                    <div class="info-row">
+                        <div class="info-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div>
+                        <div><div class="il">Domain</div><div class="iv">#{profilBean.user.domaine}</div></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                        <div><div class="il">Email</div><div class="iv">#{profilBean.user.email}</div></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                        <div><div class="il">Member since</div><div class="iv">2024</div></div>
+                    </div>
+                </div>
+            </div></div>
+
+            <div class="card"><div class="card-p">
+                <div class="sec-title" style="font-size:.92rem;margin-bottom:14px;">Languages</div>
+                <div class="lang-wrap">
+                    <span class="lang">English</span>
+                    <span class="lang">French</span>
+                    <span class="lang">Arabic</span>
+                </div>
+            </div></div>
+        </div>
+    </div>
+
+    <!-- ══ MODAL SEND MESSAGE ══ -->
+    <div class="modal-overlay" id="messageModal" onclick="closeIfOverlay(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Message <span id="recipientName">#{profilBean.user.nom}</span></div>
+                <button class="modal-close" onclick="closeMessageModal()">&#215;</button>
+            </div>
+
+            <h:form id="msgForm">
+                <!-- IDs cachés -->
+                <h:inputHidden value="#{messageBean.destinataireId}" id="destId"/>
+
+                <div class="modal-field">
+                    <label class="modal-label" for="msgSubjet">Subject</label>
+                    <h:inputText id="msgSubjet"
+                                 value="#{messageBean.sujet}"
+                                 styleClass="modal-input"
+                                 placeholder="What is this about?"/>
+                </div>
+
+                <div class="modal-field">
+                    <label class="modal-label" for="msgContenu">Message</label>
+                    <h:inputTextarea id="msgContenu"
+                                     value="#{messageBean.contenu}"
+                                     styleClass="modal-input"
+                                     placeholder="Tell the freelancer about your project..."
+                                     rows="5"/>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeMessageModal()">Cancel</button>
+                    <h:commandButton styleClass="btn-send"
+                                     action="#{messageBean.envoyerMessage}"
+                                     value="Send Message">
+                        <f:ajax execute="@form" render="@none"
+                                onevent="handleMessageSent"/>
+                    </h:commandButton>
+                </div>
+
+                <!-- Bouton visible avec icône SVG (h:commandButton ne supporte pas bien le HTML interne) -->
+            </h:form>
+
+            <!-- Bouton send avec style complet — appelle le form -->
+            <script>
+                // Surcharge le rendu du bouton send pour avoir l'icône
+                document.addEventListener('DOMContentLoaded', function() {
+                    const btn = document.querySelector('#msgForm\\:j_idt_send, [id*="msgForm"] .btn-send');
+                });
+            </script>
+        </div>
+    </div>
+
+    <!-- Toast confirmation -->
+    <div class="toast" id="toast">
+        <div class="toast-dot"></div>
+        <span id="toastMsg">Message envoyé !</span>
+    </div>
+
+    <div class="footer">2024 Freelance Platform. All rights reserved.</div>
+
+    <script>
+        // ── MODAL ──
+        function openMessageModal() {
+            document.getElementById('messageModal').classList.add('open');
+            // Injecte l'ID du destinataire dans le hidden field
+            const destField = document.querySelector('[id$="destId"]');
+            if (destField) destField.value = '#{profilBean.user.id}';
+        }
+        function closeMessageModal() {
+            document.getElementById('messageModal').classList.remove('open');
+        }
+        function closeIfOverlay(e) {
+            if (e.target === document.getElementById('messageModal')) closeMessageModal();
+        }
+
+        // ── PHOTO UPLOAD ──
+        function uploadPhoto(input, userId) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                let img = document.querySelector('.avatar-img');
+                const initials = document.getElementById('avatarInitials');
+                if (!img) {
+                    img = document.createElement('img');
+                    img.className = 'avatar-img';
+                    img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+                    document.querySelector('.avatar-circle').prepend(img);
+                }
+                img.src = e.target.result;
+                img.style.display = 'block';
+                if (initials) initials.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+
+            const formData = new FormData();
+            formData.append('photo', file);
+            formData.append('userId', userId);
+            fetch('uploadPhoto', { method: 'POST', body: formData })
+                .then(r => { if (r.ok) showToast('Photo de profil sauvegardée !'); });
+        }
+
+        // ── TOAST ──
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        // Appelé après envoi AJAX du message
+        function handleMessageSent(data) {
+            if (data.status === 'success') {
+                closeMessageModal();
+                showToast('Message envoyé avec succès !');
+                // Reset les champs
+                document.querySelector('[id$="msgSubjet"]').value = '';
+                document.querySelector('[id$="msgContenu"]').value = '';
+            }
+        }
+    </script>
+
+</h:body>
+</html>

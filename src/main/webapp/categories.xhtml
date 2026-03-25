@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:c="jakarta.tags.core">
+
+<h:head>
+    <title>Find Talent - Freelance Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #C47D2B; --primary-light: #F5E6D0;
+            --primary-hover: #a8691e; --dark: #1a1a1a;
+            --text: #2d2d2d; --text-muted: #888;
+            --border: #e8e0d5; --bg: #ffffff; --bg-section: #f7f4ef;
+            --radius: 14px;
+        }
+        body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); }
+
+        /* ── NAVBAR ── */
+        nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 60px; background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .nav-logo { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.6rem; color: var(--primary); text-decoration: none; }
+        .nav-links { display: flex; gap: 36px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+        .nav-actions { display: flex; gap: 12px; align-items: center; }
+        .btn-primary { background: var(--primary); color: #fff; border: none; padding: 11px 24px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: background 0.2s; font-family: 'Inter', sans-serif; }
+        .btn-primary:hover { background: var(--primary-hover); color: #fff; }
+        .btn-outline { background: #fff; color: var(--text); border: 1.5px solid #ddd; padding: 11px 24px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* ── PAGE HEADER ── */
+        .page-header { padding: 50px 60px 30px; }
+        .page-header h1 { font-family: 'Playfair Display', serif; font-style: italic; font-size: 2.8rem; color: var(--dark); margin-bottom: 10px; }
+        .page-header p { color: var(--text-muted); font-size: 1rem; margin-bottom: 30px; }
+
+        /* ── SEARCH BAR ── */
+        .search-bar { display: flex; gap: 12px; max-width: 700px; }
+        .search-input-wrap { flex: 1; position: relative; }
+        .search-input-wrap svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); }
+        .search-input {
+            width: 100%; padding: 13px 16px 13px 46px;
+            border: 1.5px solid var(--border); border-radius: 50px;
+            font-size: 0.95rem; font-family: 'Inter', sans-serif;
+            outline: none; transition: border-color 0.2s;
+        }
+        .search-input:focus { border-color: var(--primary); }
+        .btn-filter {
+            display: flex; align-items: center; gap: 8px;
+            background: #fff; border: 1.5px solid var(--border);
+            padding: 13px 22px; border-radius: 50px;
+            font-size: 0.9rem; font-weight: 600; cursor: pointer;
+            font-family: 'Inter', sans-serif; transition: all 0.2s;
+        }
+        .btn-filter:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* ── RESULTS COUNT ── */
+        .results-info { padding: 20px 60px; color: var(--text-muted); font-size: 0.95rem; }
+        .results-info strong { color: var(--dark); }
+
+        /* ── FREELANCER GRID ── */
+        .freelancers-section { padding: 10px 60px 70px; }
+        .freelancers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+        .freelancer-card {
+            border: 1px solid #eee; border-radius: var(--radius);
+            padding: 28px; background: #fff;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .freelancer-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); transform: translateY(-3px); }
+
+        .card-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+        .avatar-circle {
+            width: 64px; height: 64px; border-radius: 50%;
+            background: var(--primary); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1.2rem; flex-shrink: 0;
+            font-family: 'Playfair Display', serif;
+        }
+        .card-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; color: var(--dark); }
+        .card-role { color: var(--text-muted); font-size: 0.88rem; }
+
+        .card-location { display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px; }
+
+        .card-stats { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #f0ebe3; }
+        .stars { display: flex; align-items: center; gap: 4px; }
+        .star { color: var(--primary); font-size: 1rem; }
+        .star-empty { color: #ddd; font-size: 1rem; }
+        .rating-text { font-size: 0.85rem; font-weight: 600; margin-left: 4px; }
+        .reviews { color: var(--text-muted); font-size: 0.8rem; }
+        .completed { text-align: right; }
+        .completed-label { color: var(--text-muted); font-size: 0.75rem; }
+        .completed-num { font-size: 1.1rem; font-weight: 700; color: var(--dark); }
+
+        .card-price { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+        .card-price span { font-size: 0.85rem; font-weight: 400; color: var(--text-muted); }
+        .card-bio { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 16px; }
+
+        .card-skills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+        .skill-tag {
+            background: var(--primary-light); color: var(--primary);
+            padding: 4px 10px; border-radius: 50px; font-size: 0.78rem; font-weight: 500;
+        }
+
+        .btn-view-profile {
+            display: block; width: 100%; text-align: center;
+            background: var(--primary); color: #fff;
+            border: none; padding: 12px; border-radius: 10px;
+            font-size: 0.9rem; font-weight: 600; cursor: pointer;
+            text-decoration: none; transition: background 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-view-profile:hover { background: var(--primary-hover); color: #fff; }
+
+        /* ── EMPTY STATE ── */
+        .empty-state { text-align: center; padding: 80px 20px; color: var(--text-muted); }
+        .empty-state h3 { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.6rem; color: var(--dark); margin-bottom: 10px; }
+
+        /* ── MODAL FILTER ── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4); z-index: 200;
+            align-items: flex-start; justify-content: center;
+            padding-top: 60px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: #fff; border-radius: 20px;
+            width: 100%; max-width: 600px;
+            max-height: 80vh; overflow-y: auto;
+            padding: 36px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+        .modal-header h3 { font-size: 1.4rem; font-weight: 700; color: var(--dark); }
+        .modal-close { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-muted); line-height: 1; }
+
+        .filter-section { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+        .filter-section:last-of-type { border-bottom: none; }
+        .filter-section h4 { font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 14px; }
+        .filter-option { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; cursor: pointer; }
+        .filter-option input[type="checkbox"] { accent-color: var(--primary); width: 16px; height: 16px; }
+        .filter-option label { font-size: 0.9rem; color: var(--text); cursor: pointer; }
+
+        .budget-inputs { display: flex; gap: 12px; }
+        .budget-input {
+            flex: 1; padding: 10px 14px; border: 1.5px solid var(--border);
+            border-radius: 10px; font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none;
+        }
+        .budget-input:focus { border-color: var(--primary); }
+
+        .modal-actions { display: flex; gap: 12px; margin-top: 8px; }
+        .btn-clear { flex: 1; padding: 13px; background: #fff; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+        .btn-clear:hover { border-color: var(--text-muted); }
+        .btn-apply-filter { flex: 1; padding: 13px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+        .btn-apply-filter:hover { background: var(--primary-hover); }
+
+        /* ── FOOTER ── */
+        .footer-main { background: var(--bg-section); padding: 60px; display: flex; gap: 60px; }
+        .footer-brand { flex: 1.5; }
+        .footer-logo { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.5rem; color: var(--primary); margin-bottom: 12px; }
+        .footer-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; margin-bottom: 20px; }
+        .footer-contact { display: flex; flex-direction: column; gap: 8px; }
+        .footer-contact span { color: var(--text-muted); font-size: 0.85rem; display: flex; align-items: center; gap: 8px; }
+        .footer-col { flex: 1; }
+        .footer-col h5 { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dark); margin-bottom: 16px; }
+        .footer-col a { display: block; color: var(--text-muted); font-size: 0.88rem; text-decoration: none; margin-bottom: 10px; transition: color 0.2s; }
+        .footer-col a:hover { color: var(--primary); }
+        .footer-bottom { background: var(--bg-section); border-top: 1px solid var(--border); padding: 20px 60px; display: flex; justify-content: space-between; align-items: center; }
+        .footer-bottom p { color: var(--text-muted); font-size: 0.82rem; }
+        .footer-socials { display: flex; gap: 20px; }
+        .footer-socials a { color: var(--text-muted); font-size: 0.82rem; text-decoration: none; }
+        .footer-socials a:hover { color: var(--primary); }
+    </style>
+</h:head>
+
+<h:body>
+
+    <!-- ══ NAVBAR ══ -->
+    <nav>
+        <a href="index.xhtml" class="nav-logo">Freelance</a>
+        <ul class="nav-links">
+            <li><a href="index.xhtml">Home</a></li>
+            <li><a href="categories.xhtml" class="active">Categories</a></li>
+            <li><a href="jobs.xhtml">Jobs</a></li>
+            <li><a href="about.xhtml">About</a></li>
+        </ul>
+        <div class="nav-actions">
+            <a href="creerPoste.xhtml" class="btn-primary">Post a Project</a>
+            <a href="dashboard.xhtml"  class="btn-outline">Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- ══ PAGE HEADER ══ -->
+    <div class="page-header">
+        <h1>Find Talent</h1>
+        <p>Discover skilled freelancers ready to bring your projects to life</p>
+
+        <!-- SEARCH BAR -->
+        <h:form id="searchForm">
+            <div class="search-bar">
+                <div class="search-input-wrap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <h:inputText value="#{freelancerBean.searchQuery}"
+                                 styleClass="search-input"
+                                 placeholder="Search by skill, name, or expertise..."
+                                 onkeypress="if(event.keyCode==13) document.getElementById('searchForm:btnSearch').click()"/>
+                </div>
+                <h:commandButton id="btnSearch"
+                                 value="Search"
+                                 action="#{freelancerBean.search}"
+                                 styleClass="btn-primary"
+                                 style="border-radius:50px;"/>
+                <button type="button" class="btn-filter" onclick="openModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="4" y1="6" x2="20" y2="6"/>
+                        <line x1="8" y1="12" x2="16" y2="12"/>
+                        <line x1="10" y1="18" x2="14" y2="18"/>
+                    </svg>
+                    Filters
+                </button>
+            </div>
+        </h:form>
+    </div>
+
+    <!-- ══ RESULTS COUNT ══ -->
+    <div class="results-info">
+        Showing <strong>#{freelancerBean.freelancers.size()}</strong> talented freelancers
+    </div>
+
+    <!-- ══ FREELANCERS GRID ══ -->
+    <div class="freelancers-section">
+
+        <!-- Si pas de freelancers -->
+        <h:panelGroup rendered="#{empty freelancerBean.freelancers}">
+            <div class="empty-state">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="1.5" style="margin-bottom:16px;">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 010 7.75"/>
+                </svg>
+                <h3>No freelancers found</h3>
+                <p>Try changing your search or filters</p>
+            </div>
+        </h:panelGroup>
+
+        <!-- Liste des freelancers -->
+        <div class="freelancers-grid">
+            <ui:repeat xmlns:ui="jakarta.faces.facelets"
+                       value="#{freelancerBean.freelancers}" var="user">
+                <div class="freelancer-card">
+
+                    <!-- Header -->
+                    <div class="card-header">
+                        <div class="avatar-circle" style="background: #{freelancerBean.getAvatarColor(user.nom)};">
+                                #{freelancerBean.getInitials(user.nom)}
+                        </div>
+                        <div>
+                            <div class="card-name">#{user.nom}</div>
+                            <div class="card-role">#{user.domaine}</div>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="card-location">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        <h:outputText value="#{user.domaine}" rendered="#{not empty user.domaine}"/>
+                        <h:outputText value="Remote" rendered="#{empty user.domaine}"/>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="card-stats">
+                        <div>
+                            <div class="stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star-empty">★</span>
+                                <span class="rating-text">4.8</span>
+                                <span class="reviews">(42)</span>
+                            </div>
+                        </div>
+                        <div class="completed">
+                            <div class="completed-label">Completed</div>
+                            <div class="completed-num">--</div>
+                        </div>
+                    </div>
+
+                    <!-- Bio -->
+                    <div class="card-bio">
+                        <h:outputText value="#{user.bio}" rendered="#{not empty user.bio}"/>
+                        <h:outputText value="Experienced professional ready to bring your vision to life." rendered="#{empty user.bio}"/>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="card-skills">
+                        <ui:repeat xmlns:ui="jakarta.faces.facelets"
+                                   value="#{user.competences}" var="comp">
+                            <span class="skill-tag">#{comp}</span>
+                        </ui:repeat>
+                    </div>
+
+                    <!-- Button -->
+                    <a href="profil.xhtml?id=#{user.id}" class="btn-view-profile">View Profile</a>
+                </div>
+            </ui:repeat>
+        </div>
+    </div>
+
+    <!-- ══ MODAL FILTERS ══ -->
+    <div class="modal-overlay" id="filterModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Filters</h3>
+                <button class="modal-close" onclick="closeModal()">&#215;</button>
+            </div>
+
+            <div class="filter-section">
+                <h4>Category</h4>
+                <label class="filter-option"><input type="checkbox" value="Web Development"/> <span>Web Development</span></label>
+                <label class="filter-option"><input type="checkbox" value="Mobile App"/> <span>Mobile App</span></label>
+                <label class="filter-option"><input type="checkbox" value="UI/UX Design"/> <span>UI/UX Design</span></label>
+                <label class="filter-option"><input type="checkbox" value="Graphic Design"/> <span>Graphic Design</span></label>
+                <label class="filter-option"><input type="checkbox" value="Video Editing"/> <span>Video Editing</span></label>
+                <label class="filter-option"><input type="checkbox" value="Digital Marketing"/> <span>Digital Marketing</span></label>
+            </div>
+
+            <div class="filter-section">
+                <h4>Budget Range</h4>
+                <div class="budget-inputs">
+                    <input type="text" class="budget-input" placeholder="$0" id="budgetMin"/>
+                    <input type="text" class="budget-input" placeholder="$10,000" id="budgetMax"/>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h4>Experience Level</h4>
+                <label class="filter-option"><input type="checkbox"/> <span>Entry Level</span></label>
+                <label class="filter-option"><input type="checkbox"/> <span>Intermediate</span></label>
+                <label class="filter-option"><input type="checkbox"/> <span>Expert</span></label>
+                <label class="filter-option"><input type="checkbox"/> <span>Top Rated</span></label>
+            </div>
+
+            <div class="filter-section">
+                <h4>Availability</h4>
+                <label class="filter-option"><input type="checkbox"/> <span>Available Now</span></label>
+                <label class="filter-option"><input type="checkbox"/> <span>Part-Time</span></label>
+                <label class="filter-option"><input type="checkbox"/> <span>Full-Time</span></label>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-clear" onclick="clearFilters()">Clear</button>
+                <button class="btn-apply-filter" onclick="closeModal()">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ FOOTER ══ -->
+    <div class="footer-main">
+        <div class="footer-brand">
+            <div class="footer-logo">Freelance</div>
+            <div class="footer-desc">Connect with exceptional talent worldwide. Build something great together.</div>
+            <div class="footer-contact">
+                <span>✉ contact@freelance.com</span>
+                <span>✆ +1 (555) 123-4567</span>
+                <span>⊙ San Francisco, CA</span>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h5>Product</h5>
+            <a href="jobs.xhtml">Browse Jobs</a>
+            <a href="categories.xhtml">Find Talent</a>
+            <a href="categories.xhtml">Categories</a>
+        </div>
+        <div class="footer-col">
+            <h5>Company</h5>
+            <a href="#">About Us</a>
+            <a href="#">Careers</a>
+            <a href="#">Blog</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="footer-col">
+            <h5>Legal</h5>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Cookie Policy</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&#169; 2024 Freelance Platform. All rights reserved.</p>
+        <div class="footer-socials">
+            <a href="#">Twitter</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Instagram</a>
+        </div>
+    </div>
+
+    <script>
+        function openModal()  { document.getElementById('filterModal').classList.add('open'); }
+        function closeModal() { document.getElementById('filterModal').classList.remove('open'); }
+        function clearFilters() {
+            document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.getElementById('budgetMin').value = '';
+            document.getElementById('budgetMax').value = '';
+        }
+        // Fermer en cliquant dehors
+        document.getElementById('filterModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+
+</h:body>
+</html>
