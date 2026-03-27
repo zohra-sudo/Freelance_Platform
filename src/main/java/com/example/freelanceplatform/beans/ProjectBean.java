@@ -1,0 +1,184 @@
+package com.example.freelanceplatform.beans;
+
+import com.example.freelanceplatform.entities.Project;
+import com.example.freelanceplatform.service.ProjectService;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Named
+@RequestScoped
+public class ProjectBean implements Serializable {
+
+    @Inject
+    private ProjectService projectService;
+
+    private Project project = new Project();
+
+    private String searchKeyword;
+    private String selectedCategory;
+
+    private Long projectId;
+    private Project selectedProject;
+
+    private boolean showAll = false;
+
+    public List<Project> getProjects() {
+        List<Project> projects = projectService.getAllProjects();
+
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            String keyword = searchKeyword.trim().toLowerCase();
+            projects = projects.stream()
+                    .filter(p ->
+                            (p.getTitle() != null && p.getTitle().toLowerCase().contains(keyword)) ||
+                                    (p.getDescription() != null && p.getDescription().toLowerCase().contains(keyword)) ||
+                                    (p.getCategory() != null && p.getCategory().toLowerCase().contains(keyword)) ||
+                                    (p.getSkills() != null && p.getSkills().toLowerCase().contains(keyword))
+                    )
+                    .collect(Collectors.toList());
+        }
+
+        if (selectedCategory != null && !selectedCategory.trim().isEmpty()) {
+            projects = projects.stream()
+                    .filter(p -> p.getCategory() != null && p.getCategory().equalsIgnoreCase(selectedCategory))
+                    .collect(Collectors.toList());
+        }
+
+        if (!showAll && projects.size() > 4) {
+            return projects.subList(0, 4);
+        }
+
+        return projects;
+    }
+
+    public int getTotalProjectsCount() {
+        List<Project> projects = projectService.getAllProjects();
+
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            String keyword = searchKeyword.trim().toLowerCase();
+            projects = projects.stream()
+                    .filter(p ->
+                            (p.getTitle() != null && p.getTitle().toLowerCase().contains(keyword)) ||
+                                    (p.getDescription() != null && p.getDescription().toLowerCase().contains(keyword)) ||
+                                    (p.getCategory() != null && p.getCategory().toLowerCase().contains(keyword)) ||
+                                    (p.getSkills() != null && p.getSkills().toLowerCase().contains(keyword))
+                    )
+                    .collect(Collectors.toList());
+        }
+
+        if (selectedCategory != null && !selectedCategory.trim().isEmpty()) {
+            projects = projects.stream()
+                    .filter(p -> p.getCategory() != null && p.getCategory().equalsIgnoreCase(selectedCategory))
+                    .collect(Collectors.toList());
+        }
+
+        return projects.size();
+    }
+
+    public boolean isHasMoreThanFour() {
+        return getTotalProjectsCount() > 4;
+    }
+
+    public String showMore() {
+        this.showAll = true;
+        return null;
+    }
+
+    public String showLess() {
+        this.showAll = false;
+        return null;
+    }
+
+    public String createProject() {
+        projectService.addProject(project);
+        return "jobs?faces-redirect=true";
+    }
+
+    public List<String> skillsList(String skills) {
+        if (skills == null || skills.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(skills.split("\\s*,\\s*"));
+    }
+
+    public String filterByCategory(String category) {
+        this.selectedCategory = category;
+        this.showAll = false;
+        return null;
+    }
+
+    public String clearCategory() {
+        this.selectedCategory = null;
+        this.showAll = false;
+        return null;
+    }
+
+    public String search() {
+        this.showAll = false;
+        return null;
+    }
+
+    public void loadProjectById() {
+        if (projectId != null) {
+            selectedProject = projectService.findById(projectId);
+        }
+    }
+
+    public String goToProjectDetails(Long id) {
+        return "projectDetails?faces-redirect=true&id=" + id;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public String getSearchKeyword() {
+        return searchKeyword;
+    }
+
+    public void setSearchKeyword(String searchKeyword) {
+        this.searchKeyword = searchKeyword;
+    }
+
+    public String getSelectedCategory() {
+        return selectedCategory;
+    }
+
+    public void setSelectedCategory(String selectedCategory) {
+        this.selectedCategory = selectedCategory;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public Project getSelectedProject() {
+        return selectedProject;
+    }
+
+    public void setSelectedProject(Project selectedProject) {
+        this.selectedProject = selectedProject;
+    }
+
+    public boolean isShowAll() {
+        return showAll;
+    }
+
+    public void setShowAll(boolean showAll) {
+        this.showAll = showAll;
+    }
+}

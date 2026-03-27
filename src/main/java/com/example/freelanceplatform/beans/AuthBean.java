@@ -27,34 +27,43 @@ public class AuthBean implements Serializable {
     public String connecter() {
         userConnecte = userService.connecter(email, motDePasse);
         if (userConnecte != null) {
-            return "accueil?faces-redirect=true";  // ← redirige vers accueil
+            messageErreur = null;
+            return "index?faces-redirect=true";
         }
         messageErreur = "Email ou mot de passe incorrect !";
         return null;
     }
-
     // ===== INSCRIPTION =====
+
     public String inscrire() {
         boolean ok = userService.inscrire(nouveauUser);
         if (ok) {
-            return "login?faces-redirect=true";  // ← redirige vers login
+            messageErreur = null;
+            nouveauUser = new User();
+            return "login?faces-redirect=true";
         }
         messageErreur = "Cet email est déjà utilisé !";
         return null;
     }
-
     // ===== DÉCONNEXION =====
     public String deconnecter() {
-        userConnecte = null;
-        return "login?faces-redirect=true";
-    }
+        try {
+            jakarta.faces.context.FacesContext facesContext = jakarta.faces.context.FacesContext.getCurrentInstance();
 
+            facesContext.getExternalContext().invalidateSession();
+
+            String contextPath = facesContext.getExternalContext().getRequestContextPath();
+            facesContext.getExternalContext().redirect(contextPath + "/login.xhtml");
+
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
     // Vérifier si connecté
     public boolean isConnecte() {
         return userConnecte != null;
-    }
-    public void setUserConnecte(User userConnecte) {
-        this.userConnecte = userConnecte;
     }
 
     // Getters & Setters
@@ -66,6 +75,8 @@ public class AuthBean implements Serializable {
 
     public String getMessageErreur() { return messageErreur; }
     public User getUserConnecte() { return userConnecte; }
+    public void setUserConnecte(User u) { this.userConnecte = u; }
+
     public User getNouveauUser() { return nouveauUser; }
     public void setNouveauUser(User u) { this.nouveauUser = u; }
 }

@@ -11,8 +11,8 @@
         <class>com.example.freelanceplatform.entities.Message</class>
         <class>com.example.freelanceplatform.entities.Discussion</class>
         <class>com.example.freelanceplatform.entities.Candidature</class>
-
-
+        <class>com.example.freelanceplatform.entities.Project</class>
+        <class>com.example.freelanceplatform.entities.Application</class>
         <properties>
             <!-- Crée les tables automatiquement -->
             <property name="hibernate.hbm2ddl.auto" value="update"/>

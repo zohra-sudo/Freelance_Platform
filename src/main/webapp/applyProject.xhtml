@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:pt="jakarta.faces.passthrough">
+
+<h:head>
+    <title>Postuler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #C47D2B;
+            --primary-hover: #a8691e;
+            --text: #2d2d2d;
+            --text-muted: #666;
+            --bg: #fcfaf7;
+            --white: #ffffff;
+            --border: #eee;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 60px;
+            background: #fff;
+            border-bottom: 1px solid #f0ebe3;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.6rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn-outline {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 11px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .page-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+        }
+
+        .title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 16px;
+            padding: 14px;
+            font-size: 0.95rem;
+        }
+
+        .form-textarea {
+            min-height: 140px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            padding: 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .cancel-link {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+    </style>
+</h:head>
+
+<f:metadata>
+    <f:viewParam name="id" value="#{applicationBean.projectId}" />
+    <f:viewAction action="#{applicationBean.loadProject}" />
+</f:metadata>
+
+<h:body>
+
+    <nav>
+        <a href="index.xhtml" class="nav-logo">Freelance</a>
+
+        <ul class="nav-links">
+            <li><a href="index.xhtml">Home</a></li>
+            <li><a href="categories.xhtml">Categories</a></li>
+            <li><a href="jobs.xhtml">Jobs</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <a href="creerPoste.xhtml" class="btn-primary">Post a Project</a>
+            <a href="jobs.xhtml" class="btn-outline">Retour</a>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+
+        <ui:fragment rendered="#{not empty applicationBean.project}">
+            <div class="card">
+
+                <div class="title">
+                    Postuler à : #{applicationBean.project.title}
+                </div>
+
+                <h:form enctype="multipart/form-data">
+
+                    <!-- MESSAGE -->
+                    <div class="form-group">
+                        <label class="form-label">Message de motivation *</label>
+
+                        <h:inputTextarea value="#{applicationBean.application.message}"
+                                         styleClass="form-textarea"
+                                         required="true"
+                                         requiredMessage="Le message est obligatoire."
+                                         pt:placeholder="Présentez-vous et expliquez pourquoi vous êtes le bon candidat..." />
+                    </div>
+
+                    <!-- CV -->
+                    <div class="form-group">
+                        <label class="form-label">CV (PDF)</label>
+
+                        <h:inputFile value="#{applicationBean.cvFile}" />
+
+                    </div>
+
+                    <!-- PORTFOLIO -->
+                    <div class="form-group">
+                        <label class="form-label">Lien portfolio (optionnel)</label>
+
+                        <h:inputText value="#{applicationBean.application.portfolioLink}"
+                                     styleClass="form-input"
+                                     pt:placeholder="https://portfolio.com" />
+                    </div>
+
+                    <!-- TELEPHONE -->
+                    <div class="form-group">
+                        <label class="form-label">Téléphone</label>
+
+                        <h:inputText value="#{applicationBean.application.phone}"
+                                     styleClass="form-input"
+                                     pt:placeholder="+212..." />
+                    </div>
+
+                    <h:commandButton value="Envoyer ma candidature"
+                                     action="#{applicationBean.submitApplication}"
+                                     styleClass="submit-btn" />
+
+                    <a href="jobs.xhtml" class="cancel-link">Annuler</a>
+
+                </h:form>
+
+            </div>
+        </ui:fragment>
+
+        <ui:fragment rendered="#{empty applicationBean.project}">
+            <div class="card">
+                Projet introuvable.
+            </div>
+        </ui:fragment>
+
+    </div>
+
+</h:body>
+</html>
