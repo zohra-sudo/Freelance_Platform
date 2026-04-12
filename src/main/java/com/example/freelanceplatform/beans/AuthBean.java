@@ -23,13 +23,20 @@ public class AuthBean implements Serializable {
     // Champs inscription
     private User nouveauUser = new User();
 
+    // Champs pour la réinitialisation (Modifié pour Recovery Code)
+    private String resetEmail;
+    private String resetRecoveryCode;
+    private String newMotDePasse;
+    private User userToReset;
+
     // ===== CONNEXION =====
     public String connecter() {
         userConnecte = userService.connecter(email, motDePasse);
         if (userConnecte != null) {
-            return "accueil?faces-redirect=true";  // ← redirige vers accueil
+            messageErreur = null;
+            return "index?faces-redirect=true";
         }
-        messageErreur = "Email ou mot de passe incorrect !";
+        messageErreur = "Email or password incorrect!";
         return null;
     }
 
@@ -37,24 +44,60 @@ public class AuthBean implements Serializable {
     public String inscrire() {
         boolean ok = userService.inscrire(nouveauUser);
         if (ok) {
-            return "login?faces-redirect=true";  // ← redirige vers login
+            messageErreur = null;
+            nouveauUser = new User();
+            return "login?faces-redirect=true";
         }
-        messageErreur = "Cet email est déjà utilisé !";
+        messageErreur = "This email is already in use!";
         return null;
     }
 
     // ===== DÉCONNEXION =====
     public String deconnecter() {
-        userConnecte = null;
-        return "login?faces-redirect=true";
+        try {
+            jakarta.faces.context.FacesContext facesContext = jakarta.faces.context.FacesContext.getCurrentInstance();
+            facesContext.getExternalContext().invalidateSession();
+            return "login?faces-redirect=true";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // ===== RÉINITIALISATION MOT DE PASSE =====
+    public String verifierCode() {
+        if (resetEmail == null || resetRecoveryCode == null) return null;
+
+        // On ajoute .trim() pour ignorer les espaces accidentels avant ou après le texte
+        userToReset = userService.verifierCodeSecret(resetEmail.trim(), resetRecoveryCode.trim());
+
+        if (userToReset != null) {
+            messageErreur = null;
+            return "updatePassword?faces-redirect=true";
+        }
+        messageErreur = "Email or Recovery Code incorrect!";
+        return null;
+    }
+
+    public String validerNouveauMotDePasse() {
+        if (userToReset != null && newMotDePasse != null && !newMotDePasse.isEmpty()) {
+            userToReset.setMotDePasse(newMotDePasse);
+            userService.update(userToReset);
+
+            // Nettoyage des champs
+            userToReset = null;
+            resetEmail = null;
+            resetRecoveryCode = null;
+            newMotDePasse = null;
+            messageErreur = null;
+            return "login?faces-redirect=true";
+        }
+        return null;
     }
 
     // Vérifier si connecté
     public boolean isConnecte() {
         return userConnecte != null;
-    }
-    public void setUserConnecte(User userConnecte) {
-        this.userConnecte = userConnecte;
     }
 
     // Getters & Setters
@@ -65,7 +108,20 @@ public class AuthBean implements Serializable {
     public void setMotDePasse(String motDePasse) { this.motDePasse = motDePasse; }
 
     public String getMessageErreur() { return messageErreur; }
+    public void setMessageErreur(String messageErreur) { this.messageErreur = messageErreur; }
+
     public User getUserConnecte() { return userConnecte; }
+    public void setUserConnecte(User u) { this.userConnecte = u; }
+
     public User getNouveauUser() { return nouveauUser; }
     public void setNouveauUser(User u) { this.nouveauUser = u; }
+
+    public String getResetEmail() { return resetEmail; }
+    public void setResetEmail(String resetEmail) { this.resetEmail = resetEmail; }
+
+    public String getResetRecoveryCode() { return resetRecoveryCode; }
+    public void setResetRecoveryCode(String resetRecoveryCode) { this.resetRecoveryCode = resetRecoveryCode; }
+
+    public String getNewMotDePasse() { return newMotDePasse; }
+    public void setNewMotDePasse(String newMotDePasse) { this.newMotDePasse = newMotDePasse; }
 }

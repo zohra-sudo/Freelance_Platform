@@ -43,6 +43,13 @@ public class UserService implements Serializable {
         return null;  // échec
     }
 
+    public User verifierCodeSecret(String email, String codeSecret) {
+        return userDAO.verifierCodeSecret(email, codeSecret);
+    }
+
+    public void update(User user) {
+        userDAO.update(user);
+    }
     // Modifier profil
     public void modifierProfil(User user) {
         userDAO.update(user);

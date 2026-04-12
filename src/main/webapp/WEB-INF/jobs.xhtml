@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:pt="jakarta.faces.passthrough">
+
+<h:head>
+    <title>Browse Jobs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary:       #C47D2B;
+            --primary-light: #F5E6D0;
+            --primary-hover: #a8691e;
+            --dark:          #1a1a1a;
+            --text:          #2d2d2d;
+            --text-muted:    #666;
+            --bg:            #ffffff;
+            --bg-section:    #ffffff;
+            --radius:        14px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        /* ══ NAVBAR ══ */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 60px;
+            background: #fff;
+            border-bottom: 1px solid #f0ebe3;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.6rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            color: #fff;
+        }
+
+        .btn-outline {
+            background: #fff;
+            color: var(--text);
+            border: 1.5px solid #ddd;
+            padding: 11px 24px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* ══ PAGE JOBS ══ */
+        .jobs-page {
+            background: var(--bg-section);
+            padding: 60px;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 3rem;
+            color: var(--dark);
+            margin-bottom: 28px;
+        }
+
+        /* ══ SEARCH BAR ══ */
+        .search-form {
+            margin-bottom: 34px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff;
+            border: 1px solid #d9dde3;
+            border-radius: 18px;
+            padding: 14px 18px;
+        }
+
+        .search-btn {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .search-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: #8d99a6;
+        }
+
+        .search-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 1.05rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+        }
+
+        /* ══ LAYOUT ══ */
+        .jobs-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 36px;
+            align-items: start;
+        }
+
+        /* ══ SIDEBAR CATEGORY ══ */
+        .sidebar-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-card h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #102a5c;
+            margin-bottom: 24px;
+        }
+
+        .category-form {
+            margin-bottom: 10px;
+        }
+
+        .category-btn {
+            width: 100%;
+            background: transparent;
+            border: none;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: #243b63;
+            padding: 10px 0;
+        }
+
+        .category-btn::before {
+            content: "";
+            width: 22px;
+            height: 22px;
+            border: 1.5px solid #999;
+            border-radius: 4px;
+            display: inline-block;
+            flex-shrink: 0;
+            background: #fff;
+        }
+
+        .category-btn:hover {
+            color: var(--primary);
+        }
+
+        .clear-btn {
+            margin-top: 16px;
+            background: #fff;
+            color: var(--primary);
+            border: 1.5px solid var(--primary);
+            padding: 9px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .clear-btn:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* ══ LIST HEADER ══ */
+        .jobs-list-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .jobs-count {
+            font-size: 1.05rem;
+            color: #42526e;
+        }
+
+        .post-job-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .post-job-btn:hover {
+            background: var(--primary-hover);
+            color: #fff;
+        }
+
+        /* ══ JOB CARD ══ */
+        .job-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+        }
+
+        .job-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+            margin-bottom: 14px;
+        }
+
+        .job-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1.3;
+        }
+
+        .job-category {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            color: #243b63;
+            white-space: nowrap;
+        }
+
+        .job-desc {
+            color: #42526e;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .job-budget-label {
+            color: #42526e;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .job-budget-value {
+            color: var(--primary);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .job-divider {
+            border: none;
+            border-top: 1px solid #ece6dc;
+            margin: 18px 0 18px;
+        }
+
+        .job-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .skill-tag {
+            border: 1px solid #d7dce5;
+            color: #2450d3;
+            background: #eef3ff;
+            padding: 6px 13px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+        }
+
+        .view-details-btn {
+            width: 100%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 14px 18px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .view-details-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .empty-state {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 22px;
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        /* ══ JOB ACTIONS MENU ══ */
+        .job-actions-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .job-menu-btn {
+            width: 38px;
+            height: 38px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            transition: all 0.2s;
+        }
+
+        .job-menu-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .job-dropdown {
+            position: absolute;
+            top: 46px;
+            right: 0;
+            min-width: 150px;
+            background: #fff;
+            border: 1px solid #e8e0d5;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 8px 0;
+            z-index: 50;
+        }
+
+        .job-dropdown-item {
+            width: 100%;
+            display: block;
+            text-align: left;
+            background: transparent;
+            border: none;
+            padding: 10px 16px;
+            font-size: 0.92rem;
+            color: #2d2d2d;
+            text-decoration: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .job-dropdown-item:hover {
+            background: #f8f8f8;
+            color: var(--primary);
+        }
+
+        .job-dropdown-delete:hover {
+            color: #c0392b;
+        }
+
+        /* ═════ FOOTER ═════ */
+        .footer-main{
+            background:#f7f4ef;
+            padding:60px;
+            display:flex;
+            gap:80px;
+        }
+
+        .footer-brand{
+            flex:1.5;
+        }
+
+        .footer-logo{
+            font-family:'Playfair Display',serif;
+            font-style:italic;
+            font-size:1.5rem;
+            color:#C47D2B;
+            margin-bottom:12px;
+        }
+
+        .footer-desc{
+            color:#888;
+            font-size:0.9rem;
+            line-height:1.7;
+            margin-bottom:20px;
+        }
+
+        .footer-contact span{
+            display:block;
+            color:#888;
+            font-size:0.85rem;
+            margin-bottom:8px;
+        }
+
+        .footer-col{
+            flex:1;
+        }
+
+        .footer-col h5{
+            font-size:0.75rem;
+            font-weight:700;
+            letter-spacing:0.12em;
+            text-transform:uppercase;
+            color:#1a1a1a;
+            margin-bottom:16px;
+        }
+
+        .footer-col a{
+            display:block;
+            text-decoration:none;
+            color:#888;
+            font-size:0.88rem;
+            margin-bottom:10px;
+            transition:color .2s;
+        }
+
+        .footer-col a:hover{
+            color:#C47D2B;
+        }
+
+        .footer-bottom{
+            background:#f7f4ef;
+            border-top:1px solid #e8e0d5;
+            padding:20px 60px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .footer-bottom p{
+            color:#888;
+            font-size:0.82rem;
+        }
+
+        .footer-socials a{
+            color:#888;
+            font-size:0.82rem;
+            text-decoration:none;
+            margin-left:20px;
+        }
+
+        .footer-socials a:hover{
+            color:#C47D2B;
+        }
+
+        @media (max-width: 980px) {
+            nav {
+                padding: 18px 20px;
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .nav-links {
+                gap: 18px;
+                flex-wrap: wrap;
+            }
+
+            .jobs-page {
+                padding: 36px 18px 50px;
+            }
+
+            .jobs-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .jobs-list-top,
+            .job-card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .page-title {
+                font-size: 2.3rem;
+            }
+
+            .job-title {
+                font-size: 1.5rem;
+            }
+
+            .footer-main {
+                flex-direction: column;
+                padding: 36px 18px;
+                gap: 28px;
+            }
+
+            .footer-bottom {
+                padding: 20px 18px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+        }
+    </style>
+</h:head>
+
+<h:body>
+
+    <!-- ══ NAVBAR ══ -->
+    <nav>
+        <a href="index.xhtml" class="nav-logo">Freelance</a>
+        <ul class="nav-links">
+            <li><a href="index.xhtml">Home</a></li>
+            <li><a href="categories.xhtml">Categories</a></li>
+            <li><a href="jobs.xhtml">Jobs</a></li>
+            <li><a href="about.xhtml">About</a></li>
+        </ul>
+        <div class="nav-actions">
+            <a href="jobs.xhtml" class="btn-primary">Post a Project</a>
+
+            <h:form style="display:inline; margin:0;">
+                <h:commandButton value="Déconnexion"
+                                 action="#{authBean.deconnecter}"
+                                 styleClass="btn-outline" />
+            </h:form>
+        </div>
+    </nav>
+
+    <section class="jobs-page">
+        <h1 class="page-title">Browse Jobs</h1>
+
+        <!-- SEARCH -->
+        <h:form styleClass="search-form">
+            <div class="search-box">
+                <h:commandLink action="#{projectBean.search}" styleClass="search-btn" title="Search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                    </svg>
+                </h:commandLink>
+
+                <h:inputText value="#{projectBean.searchKeyword}"
+                             styleClass="search-input"
+                             pt:placeholder="Search jobs by title, skill, or category..." />
+            </div>
+        </h:form>
+
+        <div class="jobs-layout">
+
+            <!-- CATEGORY -->
+            <aside class="sidebar-card">
+                <h3>Category</h3>
+
+                <h:form styleClass="category-form">
+                    <h:commandButton value="Web Development"
+                                     action="#{projectBean.filterByCategory('Web Development')}"
+                                     styleClass="category-btn" />
+                </h:form>
+
+                <h:form styleClass="category-form">
+                    <h:commandButton value="Graphic Design"
+                                     action="#{projectBean.filterByCategory('Graphic Design')}"
+                                     styleClass="category-btn" />
+                </h:form>
+
+                <h:form styleClass="category-form">
+                    <h:commandButton value="Video Editing"
+                                     action="#{projectBean.filterByCategory('Video Editing')}"
+                                     styleClass="category-btn" />
+                </h:form>
+
+                <h:form styleClass="category-form">
+                    <h:commandButton value="Writing"
+                                     action="#{projectBean.filterByCategory('Writing')}"
+                                     styleClass="category-btn" />
+                </h:form>
+
+                <h:form styleClass="category-form">
+                    <h:commandButton value="UI/UX Design"
+                                     action="#{projectBean.filterByCategory('UI/UX Design')}"
+                                     styleClass="category-btn" />
+                </h:form>
+
+                <h:form>
+                    <h:commandButton value="Clear Filter"
+                                     action="#{projectBean.clearCategory}"
+                                     styleClass="clear-btn" />
+                </h:form>
+            </aside>
+
+            <!-- JOBS LIST -->
+            <div>
+                <div class="jobs-list-top">
+                    <div class="jobs-count">
+                        Showing #{projectBean.projects.size()} available jobs
+                    </div>
+
+                    <h:link outcome="creerPoste" styleClass="post-job-btn">
+                        + Post a Job
+                    </h:link>
+                </div>
+
+                <ui:fragment rendered="#{not empty projectBean.projects}">
+                    <ui:repeat value="#{projectBean.projects}" var="p">
+                        <div class="job-card">
+                            <div class="job-card-header">
+                                <div class="job-title">#{p.title}</div>
+
+                                <div class="job-actions-wrapper">
+                                    <span class="job-category">#{p.category}</span>
+
+                                    <h:panelGroup rendered="#{not empty authBean.user and not empty p.owner and authBean.user.id eq p.owner.id}">
+                                        <h:form style="display:inline; margin:0;">
+                                            <button type="button"
+                                                    class="job-menu-btn"
+                                                    onclick="toggleMenu('menu-#{p.id}')">⋮</button>
+
+                                            <div id="menu-#{p.id}" class="job-dropdown" style="display:none;">
+                                                <h:commandLink value="Edit"
+                                                               action="#{projectBean.goToEditProject(p.id)}"
+                                                               styleClass="job-dropdown-item" />
+
+                                                <h:commandButton value="Delete"
+                                                                 action="#{projectBean.deleteProject(p.id)}"
+                                                                 styleClass="job-dropdown-item job-dropdown-delete"
+                                                                 onclick="return confirm('Are you sure you want to delete this project?');" />
+                                            </div>
+                                        </h:form>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+
+                            <div class="job-desc">#{p.description}</div>
+
+                            <div class="job-budget-label">Budget</div>
+                            <div class="job-budget-value">$#{p.budget}</div>
+
+                            <hr class="job-divider" />
+
+                            <div class="job-skills">
+                                <ui:repeat value="#{projectBean.skillsList(p.skills)}" var="skill">
+                                    <span class="skill-tag">#{skill}</span>
+                                </ui:repeat>
+                            </div>
+
+                            <button class="view-details-btn" type="button">View Details</button>
+                        </div>
+                    </ui:repeat>
+                </ui:fragment>
+
+                <ui:fragment rendered="#{empty projectBean.projects}">
+                    <div class="empty-state">
+                        No projects found yet.
+                    </div>
+                </ui:fragment>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═════ FOOTER ═════ -->
+    <div class="footer-main">
+
+        <div class="footer-brand">
+            <div class="footer-logo">Freelance</div>
+
+            <div class="footer-desc">
+                Connect with exceptional talent worldwide. Build something great together.
+            </div>
+
+            <div class="footer-contact">
+                <span>✉ contact@freelance.com</span>
+                <span>☎ +1 (555) 123-4567</span>
+                <span>📍 San Francisco, CA</span>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <h5>Product</h5>
+            <a href="jobs.xhtml">Browse Jobs</a>
+            <a href="categories.xhtml">Find Talent</a>
+            <a href="categories.xhtml">Categories</a>
+        </div>
+
+        <div class="footer-col">
+            <h5>Company</h5>
+            <a href="#">About Us</a>
+            <a href="#">Careers</a>
+            <a href="#">Blog</a>
+            <a href="#">Contact</a>
+        </div>
+
+        <div class="footer-col">
+            <h5>Legal</h5>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Cookie Policy</a>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2024 Freelance Platform. All rights reserved.</p>
+
+        <div class="footer-socials">
+            <a href="#">Twitter</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Instagram</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu(menuId) {
+            const menu = document.getElementById(menuId);
+            const allMenus = document.querySelectorAll('.job-dropdown');
+
+            allMenus.forEach(function(item) {
+                if (item.id !== menuId) {
+                    item.style.display = 'none';
+                }
+            });
+
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const isMenuButton = event.target.closest('.job-menu-btn');
+            const isDropdown = event.target.closest('.job-dropdown');
+
+            if (!isMenuButton && !isDropdown) {
+                document.querySelectorAll('.job-dropdown').forEach(function(menu) {
+                    menu.style.display = 'none';
+                });
+            }
+        });
+    </script>
+
+</h:body>
+</html>
