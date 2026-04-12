@@ -24,6 +24,17 @@ public class UserDAO extends GenericDAO<User> {
     public boolean emailExists(String email) {
         return findByEmail(email) != null;
     }
+    public User verifierCodeSecret(String email, String recoveryCode) {
+        try {
+            // Remplacez 'u.codeSecret' par 'u.recoveryCode' pour correspondre à votre entité User
+            return em.createQuery("SELECT u FROM User u WHERE u.email = :email AND u.recoveryCode = :code", User.class)
+                    .setParameter("email", email)
+                    .setParameter("code", recoveryCode)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
     public List<User> searchByNomOrDomaine(String query) {
         String q = "%" + query.toLowerCase() + "%";
         return em.createQuery(

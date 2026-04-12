@@ -259,7 +259,18 @@
         </ul>
         <div class="nav-actions">
             <a href="creerPoste.xhtml" class="btn-primary">Post a Project</a>
-            <a href="dashboard.xhtml" class="btn-outline">Dashboard</a>
+
+            <h:panelGroup rendered="#{not authBean.connecte}">
+                <a href="login.xhtml" class="btn-outline">Connexion</a>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{authBean.connecte}">
+                <h:form style="display:inline; margin:0;">
+                    <h:commandLink value="Déconnexion" class="btn-outline"
+                                   actionListener="#{authBean.setUserConnecte(null)}"
+                                   action="login?faces-redirect=true" />
+                </h:form>
+            </h:panelGroup>
         </div>
     </nav>
 
