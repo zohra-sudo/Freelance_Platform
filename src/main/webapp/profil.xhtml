@@ -60,7 +60,6 @@
         .avatar-hover { position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,0.42); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; gap: 3px; pointer-events: none; }
         .avatar-wrap:hover .avatar-hover { opacity: 1; }
         .avatar-hover span { color: #fff; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em; }
-
         .verified-badge { display: inline-flex; align-items: center; gap: 6px; background: #e8f5e9; color: #2e7d32; padding: 7px 16px; border-radius: 50px; font-size: 0.78rem; font-weight: 700; border: 1px solid #c8e6c9; }
 
         .hero-info { padding: 0 28px 24px; }
@@ -97,8 +96,16 @@
         .avail-lbl { font-size: 0.77rem; color: var(--text-muted); margin-bottom: 8px; }
         .avail-status { font-size: 0.96rem; font-weight: 700; color: var(--dark); margin-bottom: 18px; }
 
-        .btn-msg { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px; background: var(--primary); color: var(--white); border: none; border-radius: 12px; font-size: 0.91rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; margin-bottom: 10px; box-shadow: 0 4px 14px rgba(196,125,43,0.3); }
-        .btn-msg:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        /* ── BOUTON SEND MESSAGE → redirige vers messagerie ── */
+        .btn-msg {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; padding: 13px; background: var(--primary); color: var(--white);
+            border: none; border-radius: 12px; font-size: 0.91rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
+            margin-bottom: 10px; box-shadow: 0 4px 14px rgba(196,125,43,0.3);
+            text-decoration: none;
+        }
+        .btn-msg:hover { background: var(--primary-hover); color: var(--white); transform: translateY(-1px); }
         .btn-inv { display: block; width: 100%; padding: 12px; background: var(--white); color: var(--dark); border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.91rem; font-weight: 600; text-align: center; text-decoration: none; transition: all 0.2s; }
         .btn-inv:hover { border-color: var(--primary); color: var(--primary); }
 
@@ -110,48 +117,6 @@
 
         .lang-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
         .lang { background: var(--bg); border: 1.5px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 50px; font-size: 0.82rem; font-weight: 500; }
-
-        /* ══ MODAL SEND MESSAGE ══ */
-        .modal-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.45); z-index: 500;
-            align-items: center; justify-content: center;
-            backdrop-filter: blur(4px);
-        }
-        .modal-overlay.open { display: flex; }
-        .modal {
-            background: var(--white); border-radius: 20px;
-            width: 100%; max-width: 540px; padding: 36px;
-            box-shadow: 0 24px 60px rgba(0,0,0,0.15);
-            animation: slideUp 0.25s ease;
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
-        .modal-title { font-size: 1.25rem; font-weight: 800; color: var(--dark); }
-        .modal-close { background: none; border: none; cursor: pointer; color: var(--text-muted); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; font-size: 1.2rem; }
-        .modal-close:hover { background: #f0f0f0; color: var(--dark); }
-
-        .modal-field { margin-bottom: 20px; }
-        .modal-label { display: block; font-size: 0.88rem; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
-        .modal-input {
-            width: 100%; padding: 13px 16px;
-            border: 1.5px solid var(--border); border-radius: 12px;
-            font-size: 0.92rem; font-family: 'Inter', sans-serif;
-            outline: none; transition: border-color 0.2s; color: var(--text);
-            background: var(--white);
-        }
-        .modal-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(196,125,43,0.1); }
-        .modal-input::placeholder { color: #bbb; }
-        textarea.modal-input { resize: vertical; min-height: 120px; line-height: 1.6; }
-
-        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px; }
-        .btn-cancel { padding: 12px 24px; background: var(--white); color: var(--text); border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.92rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
-        .btn-cancel:hover { border-color: var(--text-muted); }
-        .btn-send { display: flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--primary); color: var(--white); border: none; border-radius: 12px; font-size: 0.92rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 14px rgba(196,125,43,0.3); }
-        .btn-send:hover { background: var(--primary-hover); transform: translateY(-1px); }
 
         /* Toast */
         .toast { position: fixed; bottom: 30px; right: 30px; background: #1a1a1a; color: #fff; padding: 14px 22px; border-radius: 12px; font-size: 0.88rem; font-weight: 500; display: none; align-items: center; gap: 10px; z-index: 999; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
@@ -319,13 +284,13 @@
                 <div class="avail-lbl"><span class="avail-dot-s"></span>Availability</div>
                 <div class="avail-status">Available for full-time projects</div>
 
-                <!-- Bouton ouvre le modal -->
-                <button class="btn-msg" onclick="openMessageModal()">
+                <!-- ✅ BOUTON REDIRIGE VERS MESSAGERIE (plus de modal) -->
+                <a href="messagerie.xhtml?destinataire=#{profilBean.user.id}" class="btn-msg">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
                         <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
                     </svg>
                     Send Message
-                </button>
+                </a>
                 <a href="jobs.xhtml" class="btn-inv">Invite to Project</a>
             </div></div>
 
@@ -358,82 +323,15 @@
         </div>
     </div>
 
-    <!-- ══ MODAL SEND MESSAGE ══ -->
-    <div class="modal-overlay" id="messageModal" onclick="closeIfOverlay(event)">
-        <div class="modal">
-            <div class="modal-header">
-                <div class="modal-title">Message <span id="recipientName">#{profilBean.user.nom}</span></div>
-                <button class="modal-close" onclick="closeMessageModal()">&#215;</button>
-            </div>
-
-            <h:form id="msgForm">
-                <!-- IDs cachés -->
-                <h:inputHidden value="#{messageBean.destinataireId}" id="destId"/>
-
-                <div class="modal-field">
-                    <label class="modal-label" for="msgSubjet">Subject</label>
-                    <h:inputText id="msgSubjet"
-                                 value="#{messageBean.sujet}"
-                                 styleClass="modal-input"
-                                 placeholder="What is this about?"/>
-                </div>
-
-                <div class="modal-field">
-                    <label class="modal-label" for="msgContenu">Message</label>
-                    <h:inputTextarea id="msgContenu"
-                                     value="#{messageBean.contenu}"
-                                     styleClass="modal-input"
-                                     placeholder="Tell the freelancer about your project..."
-                                     rows="5"/>
-                </div>
-
-                <div class="modal-actions">
-                    <button type="button" class="btn-cancel" onclick="closeMessageModal()">Cancel</button>
-                    <h:commandButton styleClass="btn-send"
-                                     action="#{messageBean.envoyerMessage}"
-                                     value="Send Message">
-                        <f:ajax execute="@form" render="@none"
-                                onevent="handleMessageSent"/>
-                    </h:commandButton>
-                </div>
-
-                <!-- Bouton visible avec icône SVG (h:commandButton ne supporte pas bien le HTML interne) -->
-            </h:form>
-
-            <!-- Bouton send avec style complet — appelle le form -->
-            <script>
-                // Surcharge le rendu du bouton send pour avoir l'icône
-                document.addEventListener('DOMContentLoaded', function() {
-                    const btn = document.querySelector('#msgForm\\:j_idt_send, [id*="msgForm"] .btn-send');
-                });
-            </script>
-        </div>
-    </div>
-
-    <!-- Toast confirmation -->
+    <!-- Toast -->
     <div class="toast" id="toast">
         <div class="toast-dot"></div>
-        <span id="toastMsg">Message envoyé !</span>
+        <span id="toastMsg">Photo sauvegardée !</span>
     </div>
 
     <div class="footer">2024 Freelance Platform. All rights reserved.</div>
 
     <script>
-        // ── MODAL ──
-        function openMessageModal() {
-            document.getElementById('messageModal').classList.add('open');
-            // Injecte l'ID du destinataire dans le hidden field
-            const destField = document.querySelector('[id$="destId"]');
-            if (destField) destField.value = '#{profilBean.user.id}';
-        }
-        function closeMessageModal() {
-            document.getElementById('messageModal').classList.remove('open');
-        }
-        function closeIfOverlay(e) {
-            if (e.target === document.getElementById('messageModal')) closeMessageModal();
-        }
-
-        // ── PHOTO UPLOAD ──
         function uploadPhoto(input, userId) {
             const file = input.files[0];
             if (!file) return;
@@ -457,28 +355,15 @@
             formData.append('photo', file);
             formData.append('userId', userId);
             fetch('uploadPhoto', { method: 'POST', body: formData })
-                .then(r => { if (r.ok) showToast('Photo de profil sauvegardée !'); });
-        }
-
-        // ── TOAST ──
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3500);
-        }
-
-        // Appelé après envoi AJAX du message
-        function handleMessageSent(data) {
-            if (data.status === 'success') {
-                closeMessageModal();
-                showToast('Message envoyé avec succès !');
-                // Reset les champs
-                document.querySelector('[id$="msgSubjet"]').value = '';
-                document.querySelector('[id$="msgContenu"]').value = '';
-            }
+                .then(r => {
+                    if (r.ok) {
+                        const toast = document.getElementById('toast');
+                        document.getElementById('toastMsg').textContent = 'Photo sauvegardée !';
+                        toast.classList.add('show');
+                        setTimeout(() => toast.classList.remove('show'), 3500);
+                    }
+                });
         }
     </script>
-
 </h:body>
 </html>

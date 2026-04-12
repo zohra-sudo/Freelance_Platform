@@ -178,9 +178,7 @@
                             <div>
                                 <div class="msg-bubble">#{msg.contenu}</div>
                                 <div class="msg-time">
-                                    <h:outputText value="#{msg.dateEnvoi}">
-                                        <f:convertDateTime pattern="HH:mm"/>
-                                    </h:outputText>
+                                    <h:outputText value="#{msg.dateEnvoiFormatted}" />
                                 </div>
                             </div>
                         </div>

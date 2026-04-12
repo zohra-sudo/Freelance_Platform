@@ -3,6 +3,7 @@ package com.example.freelanceplatform.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "messages")
@@ -36,6 +37,11 @@ public class Message {
 
     public Boolean getLu() { return lu; }
     public void setLu(Boolean lu) { this.lu = lu; }
+    public String getDateEnvoiFormatted() {
+        return dateEnvoi != null
+                ? dateEnvoi.format(DateTimeFormatter.ofPattern("HH:mm"))
+                : "";
+    }
 
     public LocalDateTime getDateEnvoi() { return dateEnvoi; }
     public void setDateEnvoi(LocalDateTime d) { this.dateEnvoi = d; }

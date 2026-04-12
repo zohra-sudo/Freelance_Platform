@@ -1,7 +1,6 @@
 package com.example.freelanceplatform.entities;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,12 +16,12 @@ public class Discussion {
 
     private LocalDateTime dateCreation;
 
-    // Relation : une discussion contient plusieurs messages
-    @OneToMany(mappedBy = "discussion", cascade = CascadeType.ALL)
+    // Messages de la discussion
+    @OneToMany(mappedBy = "discussion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Message> messages;
 
-    // Relation : plusieurs users participent
-    @ManyToMany
+    // ✅ EAGER obligatoire pour éviter LazyInitializationException
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "discussion_participants",
             joinColumns = @JoinColumn(name = "discussion_id"),
