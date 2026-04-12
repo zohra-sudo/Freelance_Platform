@@ -19,6 +19,9 @@ public class ProjectBean implements Serializable {
     @Inject
     private ProjectService projectService;
 
+    @Inject // <--- CETTE LIGNE ÉTAIT MANQUANTE : Elle permet de lier le Bean de session
+    private AuthBean authBean;
+
     private Project project = new Project();
 
     private String searchKeyword;
@@ -28,6 +31,8 @@ public class ProjectBean implements Serializable {
     private Project selectedProject;
 
     private boolean showAll = false;
+
+    // --- LOGIQUE D'AFFICHAGE (STRICTEMENT IDENTIQUE) ---
 
     public List<Project> getProjects() {
         List<Project> projects = projectService.getAllProjects();
@@ -85,20 +90,23 @@ public class ProjectBean implements Serializable {
         return getTotalProjectsCount() > 4;
     }
 
-    public String showMore() {
-        this.showAll = true;
-        return null;
-    }
-
-    public String showLess() {
-        this.showAll = false;
-        return null;
-    }
+    // --- LOGIQUE DE CRÉATION ---
 
     public String createProject() {
-        projectService.addProject(project);
-        return "jobs?faces-redirect=true";
+        // Désormais authBean n'est plus null grâce au @Inject
+        if (authBean != null && authBean.isConnecte()) {
+            project.setAuthor(authBean.getUserConnecte());
+            projectService.addProject(project);
+            project = new Project();
+            return "jobs?faces-redirect=true";
+        }
+        return "login?faces-redirect=true";
     }
+
+    // --- LE RESTE DU CODE (IDENTIQUE) ---
+
+    public String showMore() { this.showAll = true; return null; }
+    public String showLess() { this.showAll = false; return null; }
 
     public List<String> skillsList(String skills) {
         if (skills == null || skills.trim().isEmpty()) {
@@ -134,51 +142,17 @@ public class ProjectBean implements Serializable {
         return "projectDetails?faces-redirect=true&id=" + id;
     }
 
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    public String getSearchKeyword() {
-        return searchKeyword;
-    }
-
-    public void setSearchKeyword(String searchKeyword) {
-        this.searchKeyword = searchKeyword;
-    }
-
-    public String getSelectedCategory() {
-        return selectedCategory;
-    }
-
-    public void setSelectedCategory(String selectedCategory) {
-        this.selectedCategory = selectedCategory;
-    }
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
-    public Project getSelectedProject() {
-        return selectedProject;
-    }
-
-    public void setSelectedProject(Project selectedProject) {
-        this.selectedProject = selectedProject;
-    }
-
-    public boolean isShowAll() {
-        return showAll;
-    }
-
-    public void setShowAll(boolean showAll) {
-        this.showAll = showAll;
-    }
+    // Getters & Setters
+    public Project getProject() { return project; }
+    public void setProject(Project project) { this.project = project; }
+    public String getSearchKeyword() { return searchKeyword; }
+    public void setSearchKeyword(String searchKeyword) { this.searchKeyword = searchKeyword; }
+    public String getSelectedCategory() { return selectedCategory; }
+    public void setSelectedCategory(String selectedCategory) { this.selectedCategory = selectedCategory; }
+    public Long getProjectId() { return projectId; }
+    public void setProjectId(Long projectId) { this.projectId = projectId; }
+    public Project getSelectedProject() { return selectedProject; }
+    public void setSelectedProject(Project selectedProject) { this.selectedProject = selectedProject; }
+    public boolean isShowAll() { return showAll; }
+    public void setShowAll(boolean showAll) { this.showAll = showAll; }
 }

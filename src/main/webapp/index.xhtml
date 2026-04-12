@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core">
-
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
 <h:head>
     <title>Freelance Platform</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -187,6 +187,7 @@
             background: #fff; border: 1.5px solid #ddd; color: var(--text);
             padding: 8px 18px; border-radius: 50px; font-size: 0.85rem;
             cursor: pointer; font-family: 'Inter', sans-serif;
+            text-decoration: none; display: inline-block;
             transition: border-color 0.2s;
         }
         .btn-details:hover { border-color: var(--primary); color: var(--primary); }
@@ -194,9 +195,10 @@
             background: var(--primary); color: #fff; border: none;
             padding: 8px 20px; border-radius: 50px; font-size: 0.85rem;
             font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
+            text-decoration: none; display: inline-block;
             transition: background 0.2s;
         }
-        .btn-apply:hover { background: var(--primary-hover); }
+        .btn-apply:hover { background: var(--primary-hover); color: #fff; }
 
         .view-all-wrapper { text-align: center; margin-top: 30px; }
         .btn-view-all {
@@ -248,7 +250,6 @@
 
 <h:body>
 
-    <!-- ══ NAVBAR ══ -->
     <nav>
         <a href="index.xhtml" class="nav-logo">Freelance</a>
         <ul class="nav-links">
@@ -274,7 +275,6 @@
         </div>
     </nav>
 
-    <!-- ══ HERO ══ -->
     <section class="hero">
         <div class="hero-text">
             <h1>Boost your projects with exceptional freelancers</h1>
@@ -288,7 +288,6 @@
         <div class="hero-image">Professional Freelancer Image</div>
     </section>
 
-    <!-- ══ POPULAR CATEGORIES ══ -->
     <section class="section">
         <div class="section-header">
             <h2>Popular Categories</h2>
@@ -381,7 +380,6 @@
         </div>
     </section>
 
-    <!-- ══ RECENT JOBS ══ -->
     <section class="jobs-section">
         <div class="jobs-header">
             <div style="display:flex; justify-content:center; margin-bottom:16px;">
@@ -391,71 +389,70 @@
             <p>Discover the latest project requests from clients who need your skills</p>
         </div>
 
-        <div class="job-card">
-            <div class="job-card-header">
-                <div class="job-author">
-                    <div class="avatar">AB</div>
-                    <div>
-                        <div class="author-name">Ahmed B.</div>
-                        <div class="author-time">2h ago</div>
-                    </div>
-                </div>
-                <span class="job-tag">Web Development</span>
-            </div>
-            <div class="job-title">I need a developer to build an e-commerce app for my business</div>
-            <div class="job-desc">Looking for an experienced developer to create a full e-commerce platform with product catalog, cart, and payment system.</div>
-            <div class="job-meta">
-                <span>Remote</span>
-                <span>2 weeks</span>
-                <span class="budget">$ 2500 USD</span>
-            </div>
-            <div class="job-skills">
-                <span class="skill-tag">React</span>
-                <span class="skill-tag">Node.js</span>
-                <span class="skill-tag">PostgreSQL</span>
-                <span class="skill-tag">Stripe</span>
-            </div>
-            <div class="job-actions">
-                <button class="btn-details">More details</button>
-                <button class="btn-apply">Apply</button>
-            </div>
-        </div>
+        <ui:repeat value="#{projectBean.projects}" var="job" size="3">
+            <div class="job-card">
+                <div class="job-card-header">
+                    <div class="job-author">
+                        <h:panelGroup rendered="#{not empty job.author.photo}">
+                            <h:graphicImage value="/uploads/#{job.author.photo}" styleClass="avatar" />
+                        </h:panelGroup>
 
-        <div class="job-card">
-            <div class="job-card-header">
-                <div class="job-author">
-                    <div class="avatar" style="background:#8B5CF6;">SM</div>
-                    <div>
-                        <div class="author-name">Sarah M.</div>
-                        <div class="author-time">5h ago</div>
+                        <h:panelGroup rendered="#{empty job.author.photo}">
+                            <div class="avatar" style="background: #C47D2B; display: flex; align-items: center; justify-content: center;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                </svg>
+                            </div>
+                        </h:panelGroup>
+
+                        <div>
+                            <div class="author-name">
+                                <h:outputText value="#{not empty job.author ? job.author.nom : 'Utilisateur inconnu'}" />
+                            </div>
+
+                            <div class="author-time">
+                                <h:outputText value="#{job.createdAt}" rendered="#{not empty job.createdAt}">
+                                    <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                                <h:outputText value="Date inconnue" rendered="#{empty job.createdAt}" />
+                            </div>
+                        </div>
                     </div>
+
+                    <span class="job-tag">#{job.category}</span>
                 </div>
-                <span class="job-tag">Graphic Design</span>
+                <div class="job-title">#{job.title}</div>
+                <div class="job-desc">#{job.description}</div>
+                <div class="job-meta">
+                    <span>Remote</span>
+                    <span class="budget">$ #{job.budget} USD</span>
+                </div>
+
+                <div class="job-skills">
+                    <ui:repeat value="#{projectBean.skillsList(job.skills)}" var="skill">
+                        <span class="skill-tag">#{skill}</span>
+                    </ui:repeat>
+                </div>
+
+                <div class="job-actions">
+                    <h:link outcome="projectDetails" styleClass="btn-details">
+                        <f:param name="id" value="#{job.id}" />
+                        More details
+                    </h:link>
+
+                    <h:link outcome="applyProject" styleClass="btn-apply">
+                        <f:param name="id" value="#{job.id}" />
+                        Apply
+                    </h:link>
+                </div>
             </div>
-            <div class="job-title">Need a designer to create my startup brand identity</div>
-            <div class="job-desc">We are launching a new skincare brand and need a complete visual identity from logo to packaging design.</div>
-            <div class="job-meta">
-                <span>Paris, France</span>
-                <span>10 days</span>
-                <span class="budget">$ 1200 USD</span>
-            </div>
-            <div class="job-skills">
-                <span class="skill-tag">Figma</span>
-                <span class="skill-tag">Illustrator</span>
-                <span class="skill-tag">Branding</span>
-            </div>
-            <div class="job-actions">
-                <button class="btn-details">More details</button>
-                <button class="btn-apply">Apply</button>
-            </div>
-        </div>
+        </ui:repeat>
 
         <div class="view-all-wrapper">
-            <a href="jobs.xhtml" class="btn-view-all">View all requests and Post your project →</a>
+            <a href="jobs.xhtml" class="btn-view-all">View all jobs →</a>
         </div>
     </section>
 
-    <!-- ══ CTA DARK ══ -->
     <div class="cta-section">
         <div class="cta-left">
             <div class="cta-badge">GET STARTED TODAY</div>
@@ -504,7 +501,6 @@
         </div>
     </div>
 
-    <!-- ══ FOOTER ══ -->
     <footer>
         <p>2024 Freelance Platform. All rights reserved.</p>
     </footer>
