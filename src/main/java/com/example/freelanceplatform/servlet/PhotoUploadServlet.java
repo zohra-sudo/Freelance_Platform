@@ -1,5 +1,6 @@
 package com.example.freelanceplatform.servlet;
 
+import com.example.freelanceplatform.beans.AuthBean;
 import com.example.freelanceplatform.entities.User;
 import com.example.freelanceplatform.service.UserService;
 import jakarta.inject.Inject;
@@ -9,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
@@ -33,54 +35,66 @@ public class PhotoUploadServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            // Récupère l'ID de l'utilisateur
-            String userIdStr = request.getParameter("userId");
-            if (userIdStr == null) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "userId manquant");
+            // --- SÉCURITÉ : VÉRIFICATION DE LA SESSION ---
+            HttpSession session = request.getSession();
+
+            // On récupère le bean géré par JSF (généralement stocké sous son nom de classe avec minuscule ou tel que défini par @Named)
+            AuthBean auth = (AuthBean) session.getAttribute("authBean");
+
+            if (auth == null || auth.getUserConnecte() == null) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Accès refusé : vous n'êtes pas connecté.");
                 return;
             }
-            Long userId = Long.parseLong(userIdStr);
 
-            // Récupère le fichier uploadé
+            // On récupère l'utilisateur depuis la session serveur (impossible à truquer par le client)
+            User userConnecte = auth.getUserConnecte();
+            Long userId = userConnecte.getId();
+
+            // --- TRAITEMENT DU FICHIER ---
             Part filePart = request.getPart("photo");
             if (filePart == null || filePart.getSize() == 0) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Fichier manquant");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Fichier manquant ou vide.");
                 return;
             }
 
-            // Crée le dossier uploads/photos si nécessaire
+            // Préparation du dossier de stockage
             String uploadPath = getServletContext().getRealPath("")
                     + File.separator + "uploads" + File.separator + "photos";
             File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) uploadDir.mkdirs();
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
 
-            // Nom de fichier unique
+            // Détermination du nom de fichier unique
             String originalName = filePart.getSubmittedFileName();
-            String extension = "jpg";
+            String extension = "jpg"; // extension par défaut
             if (originalName != null && originalName.contains(".")) {
                 extension = originalName.substring(originalName.lastIndexOf('.') + 1).toLowerCase();
             }
+
+            // On inclut l'ID utilisateur et un UUID pour éviter les conflits de noms
             String fileName = "user_" + userId + "_" + UUID.randomUUID() + "." + extension;
 
-            // Sauvegarde le fichier
+            // Sauvegarde physique du fichier sur le serveur
             try (InputStream input = filePart.getInputStream()) {
                 Files.copy(input, Paths.get(uploadPath, fileName), StandardCopyOption.REPLACE_EXISTING);
             }
 
-            // Met à jour la BD
-            User user = userService.findById(userId);
-            if (user != null) {
-                user.setPhoto("uploads/photos/" + fileName);
-                userService.modifierProfil(user);
-            }
+            // --- MISE À JOUR DE LA BASE DE DONNÉES ---
+            // On met à jour l'objet utilisateur de la session
+            userConnecte.setPhoto("uploads/photos/" + fileName);
 
-            // Réponse OK
+            // Appel au service pour persister en base
+            userService.modifierProfil(userConnecte);
+
+            // Réponse de succès
+            response.setContentType("text/plain");
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write("OK");
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erreur serveur : " + e.getMessage());
         }
     }
 }

@@ -134,7 +134,9 @@
         </ul>
         <div class="nav-actions">
             <a href="creerPoste.xhtml" class="btn-pnav">Post a Project</a>
-            <a href="dashboard.xhtml"  class="btn-onav">Dashboard</a>
+            <h:form style="display:inline;">
+                <h:commandLink action="#{authBean.deconnecter}" value="Déconnexion" styleClass="btn-onav" style="text-decoration:none; display:inline-block;" />
+            </h:form>
         </div>
     </nav>
 

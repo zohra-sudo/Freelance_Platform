@@ -54,7 +54,20 @@
         /* AVATAR */
         .avatar-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: -46px; margin-bottom: 18px; padding: 0 28px; }
         .avatar-wrap { position: relative; cursor: pointer; display: inline-block; }
-        .avatar-circle { width: 90px; height: 90px; border-radius: 50%; border: 4px solid var(--white); box-shadow: 0 6px 20px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700; color: var(--white); overflow: hidden; transition: transform 0.2s; }
+        .avatar-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* EMPÊCHE L'IMAGE DE DÉPASSER DU CERCLE */
+            position: relative;
+            background-color: #eee;
+            z-index: 5;
+        }
         .avatar-wrap:hover .avatar-circle { transform: scale(1.04); }
         .avatar-img { width: 100%; height: 100%; object-fit: cover; }
         .avatar-hover { position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,0.42); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; gap: 3px; pointer-events: none; }
@@ -123,7 +136,10 @@
         .toast.show { display: flex; animation: fadeIn 0.3s ease; }
         .toast-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; flex-shrink: 0; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-
+        .nav-links a.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
         .footer { background: #1a1a1a; color: #666; text-align: center; padding: 20px; font-size: 0.82rem; }
     </style>
 </h:head>
@@ -141,11 +157,29 @@
             <li><a href="index.xhtml">Home</a></li>
             <li><a href="categories.xhtml">Categories</a></li>
             <li><a href="jobs.xhtml">Jobs</a></li>
-            <li><a href="#">About</a></li>
+
+            <h:panelGroup rendered="#{authBean.connecte}">
+                <li>
+                    <h:link outcome="profil" styleClass="active">
+                        <f:param name="id" value="#{authBean.userConnecte.id}" />
+                        Profil
+                    </h:link>
+                </li>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{not authBean.connecte}">
+                <li><a href="about.xhtml">About</a></li>
+            </h:panelGroup>
         </ul>
         <div class="nav-actions">
             <a href="creerPoste.xhtml" class="btn-pnav">Post a Project</a>
-            <a href="dashboard.xhtml"  class="btn-onav">Dashboard</a>
+
+            <h:form style="display:inline; margin:0; padding:0;">
+                <h:commandLink action="#{authBean.deconnecter}"
+                               value="Déconnexion"
+                               styleClass="btn-onav"
+                               style="text-decoration:none; display:inline-block;" />
+            </h:form>
         </div>
     </nav>
 
@@ -168,28 +202,41 @@
                         Open to work
                     </div>
                 </div>
-
                 <div class="avatar-row">
-                    <div class="avatar-wrap" onclick="document.getElementById('fileInput').click()">
-                        <div class="avatar-circle" style="background: #{profilBean.avatarColor};">
+                    <h:panelGroup rendered="#{authBean.connecte and authBean.userConnecte.id == profilBean.user.id}">
+                        <div class="avatar-wrap" onclick="document.getElementById('fileInput').click()">
+                            <div class="avatar-circle" style="background: #{profilBean.avatarColor};">
+                                <h:graphicImage value="/#{profilBean.user.photo}"
+                                                styleClass="avatar-img"
+                                                rendered="#{not empty profilBean.user.photo}"/>
+
+                                <h:panelGroup rendered="#{empty profilBean.user.photo}">
+                                    <span id="avatarInitials">#{profilBean.initials}</span>
+                                </h:panelGroup>
+                            </div>
+                            <div class="avatar-hover">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                                    <circle cx="12" cy="13" r="4"/>
+                                </svg>
+                                <span>CHANGE</span>
+                            </div>
+                        </div>
+                        <input type="file" id="fileInput" accept="image/*" style="display:none"
+                               onchange="uploadPhoto(this, #{authBean.userConnecte.id})"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{not authBean.connecte or authBean.userConnecte.id != profilBean.user.id}">
+                        <div class="avatar-circle" style="background: #{profilBean.avatarColor}; cursor: default;">
                             <h:graphicImage value="/#{profilBean.user.photo}"
                                             styleClass="avatar-img"
                                             rendered="#{not empty profilBean.user.photo}"/>
-                            <span id="avatarInitials"
-                                  style="#{not empty profilBean.user.photo ? 'display:none' : ''}">
-                                #{profilBean.initials}
-                            </span>
+
+                            <h:panelGroup rendered="#{empty profilBean.user.photo}">
+                                <span>#{profilBean.initials}</span>
+                            </h:panelGroup>
                         </div>
-                        <div class="avatar-hover">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                                <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
-                                <circle cx="12" cy="13" r="4"/>
-                            </svg>
-                            <span>CHANGE PHOTO</span>
-                        </div>
-                    </div>
-                    <input type="file" id="fileInput" accept="image/*" style="display:none"
-                           onchange="uploadPhoto(this, #{profilBean.user.id})"/>
+                    </h:panelGroup>
 
                     <div class="verified-badge">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
