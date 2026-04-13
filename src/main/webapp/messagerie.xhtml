@@ -9,7 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        :root { --primary:#C47D2B; --primary-light:#F5E6D0; --primary-hover:#a8691e; --dark:#1a1a1a; --text:#2d2d2d; --text-muted:#888; --border:#e8e0d5; --bg:#f7f4ef; --white:#fff; }
+        :root {
+            --primary:#C47D2B; --primary-light:#F5E6D0;
+            --primary-hover:#a8691e; --dark:#1a1a1a;
+            --text:#2d2d2d; --text-muted:#888;
+            --border:#e8e0d5; --bg:#f7f4ef; --white:#fff;
+        }
         body { font-family:'Inter',sans-serif; color:var(--text); background:var(--bg); height:100vh; display:flex; flex-direction:column; overflow:hidden; }
         nav { display:flex; align-items:center; justify-content:space-between; padding:14px 40px; background:var(--white); border-bottom:1px solid var(--border); flex-shrink:0; }
         .nav-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:1.5rem; color:var(--primary); text-decoration:none; }
@@ -37,43 +42,82 @@
         .conv-info { flex:1; min-width:0; }
         .conv-name { font-size:0.9rem; font-weight:600; color:var(--dark); margin-bottom:3px; }
         .conv-preview { font-size:0.78rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        .conv-time { font-size:0.72rem; color:var(--text-muted); }
+        .conv-time { font-size:0.72rem; color:var(--text-muted); white-space:nowrap; }
         .conv-empty { padding:40px 20px; text-align:center; color:var(--text-muted); font-size:0.88rem; }
-        .chat-zone { flex:1; display:flex; flex-direction:column; background:var(--bg); }
-        .chat-header { background:var(--white); border-bottom:1px solid var(--border); padding:16px 24px; display:flex; align-items:center; gap:14px; flex-shrink:0; }
+        .chat-zone { flex:1; display:flex; flex-direction:column; background:var(--bg); overflow:hidden; }
+        .chat-header { background:var(--white); border-bottom:1px solid var(--border); padding:14px 24px; display:flex; align-items:center; gap:14px; flex-shrink:0; }
         .chat-header-avatar { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:700; color:var(--white); font-size:0.95rem; overflow:hidden; }
         .chat-header-avatar img { width:100%; height:100%; object-fit:cover; }
         .chat-header-info h3 { font-size:0.97rem; font-weight:700; color:var(--dark); }
-        .chat-header-info span { font-size:0.78rem; color:#22c55e; font-weight:500; }
+        .chat-online { font-size:0.75rem; color:#22c55e; font-weight:500; display:flex; align-items:center; gap:5px; }
+        .online-dot { width:7px; height:7px; background:#22c55e; border-radius:50%; display:inline-block; }
         .chat-header-actions { margin-left:auto; }
-        .chat-action-btn { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:7px 14px; font-size:0.8rem; font-weight:600; cursor:pointer; color:var(--text); text-decoration:none; display:inline-block; transition:all 0.2s; }
+        .chat-action-btn { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:7px 14px; font-size:0.8rem; font-weight:600; color:var(--text); text-decoration:none; display:inline-block; transition:all 0.2s; }
         .chat-action-btn:hover { border-color:var(--primary); color:var(--primary); }
-        .chat-messages { flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:10px; }
-        .date-sep { text-align:center; margin:8px 0; }
-        .date-sep span { background:rgba(0,0,0,0.06); color:var(--text-muted); font-size:0.72rem; padding:4px 12px; border-radius:50px; }
-        .msg-row { display:flex; align-items:flex-end; gap:8px; }
+        .chat-messages { flex:1; overflow-y:auto; padding:20px 24px; display:flex; flex-direction:column; gap:6px; scroll-behavior:smooth; }
+        .date-sep { text-align:center; margin:10px 0; }
+        .date-sep span { background:rgba(0,0,0,0.06); color:var(--text-muted); font-size:0.7rem; padding:4px 14px; border-radius:50px; }
+        .msg-row { display:flex; align-items:flex-end; gap:8px; margin-bottom:2px; }
         .msg-row.sent { flex-direction:row-reverse; }
-        .msg-bubble-avatar { width:30px; height:30px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:700; font-size:0.7rem; color:#fff; overflow:hidden; }
-        .msg-bubble-avatar img { width:100%; height:100%; object-fit:cover; }
-        .msg-bubble { max-width:65%; padding:10px 14px; border-radius:18px; font-size:0.88rem; line-height:1.55; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
-        .msg-row.received .msg-bubble { background:var(--white); color:var(--text); border-bottom-left-radius:4px; }
-        .msg-row.sent .msg-bubble { background:var(--primary); color:#fff; border-bottom-right-radius:4px; }
-        .msg-time { font-size:0.68rem; margin-top:4px; opacity:0.65; }
-        .msg-row.sent .msg-time { color:rgba(255,255,255,0.8); text-align:right; }
-        .msg-row.received .msg-time { color:var(--text-muted); }
-        .chat-input-zone { background:var(--white); border-top:1px solid var(--border); padding:16px 24px; flex-shrink:0; }
-        .chat-input-form { display:flex; align-items:flex-end; gap:12px; }
-        .chat-input-wrap { flex:1; }
-        .chat-input-field { width:100%; padding:12px 16px; border:1.5px solid var(--border); border-radius:24px; font-size:0.9rem; font-family:'Inter',sans-serif; outline:none; resize:none; line-height:1.5; max-height:120px; min-height:46px; transition:border-color 0.2s; background:var(--bg); }
-        .chat-input-field:focus { border-color:var(--primary); background:var(--white); }
-        .chat-send-btn { width:46px; height:46px; border-radius:50%; background:var(--primary); color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:all 0.2s; box-shadow:0 4px 12px rgba(196,125,43,0.3); }
-        .chat-send-btn:hover { background:var(--primary-hover); transform:scale(1.05); }
-        .chat-empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-muted); gap:16px; }
-        .chat-empty-icon { width:80px; height:80px; background:var(--primary-light); border-radius:50%; display:flex; align-items:center; justify-content:center; }
-        .chat-empty h3 { font-family:'Playfair Display',serif; font-style:italic; font-size:1.3rem; color:var(--dark); }
-        .chat-empty p { font-size:0.88rem; text-align:center; max-width:260px; line-height:1.6; }
+        .msg-avatar { width:28px; height:28px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:700; font-size:0.65rem; color:#fff; overflow:hidden; }
+        .msg-avatar img { width:100%; height:100%; object-fit:cover; }
+        .msg-content { display:flex; flex-direction:column; max-width:62%; }
+        .msg-row.sent .msg-content { align-items:flex-end; }
+        .msg-row.received .msg-content { align-items:flex-start; }
+        .msg-bubble { padding:9px 14px; border-radius:18px; font-size:0.875rem; line-height:1.5; word-break:break-word; box-shadow:0 1px 2px rgba(0,0,0,0.08); }
+        .msg-row.received .msg-bubble { background:var(--white); color:var(--text); border-bottom-left-radius:5px; }
+        .msg-row.sent .msg-bubble { background:var(--primary); color:#fff; border-bottom-right-radius:5px; }
+        .msg-meta { display:flex; align-items:center; gap:4px; margin-top:3px; padding:0 2px; }
+        .msg-time { font-size:0.65rem; color:var(--text-muted); }
+        .msg-row.sent .msg-time { color:rgba(255,255,255,0.7); }
+        .msg-check { font-size:0.68rem; color:rgba(255,255,255,0.75); letter-spacing:-1px; }
+
+        /* INPUT ZONE */
+        .chat-input-zone { background:var(--white); border-top:1px solid var(--border); padding:12px 20px; flex-shrink:0; }
+        .input-row { display:flex; align-items:flex-end; gap:10px; }
+        .input-box-wrap { flex:1; background:var(--bg); border:1.5px solid var(--border); border-radius:26px; display:flex; align-items:flex-end; padding:6px 16px; transition:border-color 0.2s; }
+        .input-box-wrap:focus-within { border-color:var(--primary); background:var(--white); }
+        .chat-input-field { flex:1; background:transparent; border:none; outline:none; font-size:0.9rem; font-family:'Inter',sans-serif; resize:none; line-height:1.5; max-height:100px; min-height:28px; padding:4px 0; color:var(--text); }
+        .chat-input-field::placeholder { color:#bbb; }
+
+        /* ══ BOUTON SEND — wrapper visible, bouton JSF invisible ══ */
+        .send-btn-outer {
+            position:relative; width:46px; height:46px; flex-shrink:0;
+        }
+        /* Le vrai bouton JSF — transparent, couvre toute la zone cliquable */
+        .chat-send-btn {
+            position:absolute; inset:0;
+            width:100%; height:100%;
+            border:none; background:transparent;
+            cursor:pointer; z-index:2;
+            font-size:0; color:transparent;
+            border-radius:50%;
+        }
+        /* Le visuel du bouton — derrière, non cliquable */
+        .send-btn-visual {
+            position:absolute; inset:0;
+            width:46px; height:46px; border-radius:50%;
+            background:var(--primary);
+            display:flex; align-items:center; justify-content:center;
+            box-shadow:0 3px 12px rgba(196,125,43,0.4);
+            transition:all 0.18s;
+            pointer-events:none; z-index:1;
+        }
+        .send-btn-outer:hover .send-btn-visual {
+            background:var(--primary-hover);
+            transform:scale(1.08);
+            box-shadow:0 4px 16px rgba(196,125,43,0.5);
+        }
+        .send-btn-outer:active .send-btn-visual { transform:scale(0.96); }
+
+        /* EMPTY */
+        .chat-empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-muted); gap:14px; }
+        .chat-empty-icon { width:72px; height:72px; background:var(--primary-light); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .chat-empty h3 { font-family:'Playfair Display',serif; font-style:italic; font-size:1.2rem; color:var(--dark); }
+        .chat-empty p { font-size:0.85rem; text-align:center; max-width:240px; line-height:1.6; }
     </style>
 </h:head>
+
 <h:body>
     <f:metadata>
         <f:viewParam name="destinataire" value="#{messagerieBean.destinataireId}"/>
@@ -102,7 +146,8 @@
                 <h2>Messages</h2>
                 <div class="conv-search">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
                     </svg>
                     <input type="text" placeholder="Search..." oninput="filterConv(this.value)"/>
                 </div>
@@ -132,10 +177,13 @@
 
         <!-- CHAT ZONE -->
         <div class="chat-zone">
-            <h:panelGroup id="chatEmpty" rendered="#{messagerieBean.discussionActive == null}" style="display:flex;flex-direction:column;flex:1;">
+
+            <!-- Aucune conversation -->
+            <h:panelGroup rendered="#{messagerieBean.discussionActive == null}"
+                          style="display:flex;flex-direction:column;flex:1;">
                 <div class="chat-empty">
                     <div class="chat-empty-icon">
-                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="1.5">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="1.5">
                             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
                         </svg>
                     </div>
@@ -144,7 +192,10 @@
                 </div>
             </h:panelGroup>
 
-            <h:panelGroup rendered="#{messagerieBean.discussionActive != null}" style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
+            <!-- Conversation active -->
+            <h:panelGroup rendered="#{messagerieBean.discussionActive != null}"
+                          style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
+
                 <!-- Header -->
                 <div class="chat-header">
                     <div class="chat-header-avatar" style="background:#{messagerieBean.interlocutorActiveColor};">
@@ -155,91 +206,127 @@
                     </div>
                     <div class="chat-header-info">
                         <h3>#{messagerieBean.interlocutorActiveName}</h3>
-                        <span>Active</span>
+                        <div class="chat-online">
+                            <span class="online-dot"></span> Online
+                        </div>
                     </div>
                     <div class="chat-header-actions">
-                        <a href="profil.xhtml?id=#{messagerieBean.interlocutorActiveId}" class="chat-action-btn">View Profile</a>
+                        <a href="profil.xhtml?id=#{messagerieBean.interlocutorActiveId}"
+                           class="chat-action-btn">View Profile</a>
                     </div>
                 </div>
 
                 <!-- Messages -->
-                <div class="chat-messages" id="chatMessages">
+                <h:panelGroup id="chatMessages" layout="block" styleClass="chat-messages">
                     <div class="date-sep"><span>Today</span></div>
                     <ui:repeat value="#{messagerieBean.messages}" var="msg">
-                        <div class="msg-row #{msg.expediteur != null and msg.expediteur.id == authBean.userConnecte.id ? 'sent' : 'received'}">
-                            <h:panelGroup rendered="#{msg.expediteur == null or msg.expediteur.id != authBean.userConnecte.id}">
-                                <div class="msg-bubble-avatar" style="background:#{messagerieBean.interlocutorActiveColor};">
+                        <div class="msg-row #{msg.expediteur != null and authBean.userConnecte != null and msg.expediteur.id == authBean.userConnecte.id ? 'sent' : 'received'}">
+                            <h:panelGroup rendered="#{msg.expediteur == null or authBean.userConnecte == null or msg.expediteur.id != authBean.userConnecte.id}">
+                                <div class="msg-avatar" style="background:#{messagerieBean.interlocutorActiveColor};">
                                     <h:graphicImage value="/#{messagerieBean.interlocutorActivePhoto}"
                                                     rendered="#{not empty messagerieBean.interlocutorActivePhoto}"/>
                                     <h:outputText value="#{messagerieBean.interlocutorActiveInitials}"
                                                   rendered="#{empty messagerieBean.interlocutorActivePhoto}"/>
                                 </div>
                             </h:panelGroup>
-                            <div>
+                            <div class="msg-content">
                                 <div class="msg-bubble">#{msg.contenu}</div>
-                                <div class="msg-time">
-                                    <h:outputText value="#{msg.dateEnvoiFormatted}" />
+                                <div class="msg-meta">
+                                    <span class="msg-time">
+                                        <h:outputText value="#{messagerieBean.formatTime(msg.dateEnvoi)}"/>
+                                    </span>
+                                    <h:panelGroup rendered="#{msg.expediteur != null and authBean.userConnecte != null and msg.expediteur.id == authBean.userConnecte.id}">
+                                        <span class="msg-check">&#10003;&#10003;</span>
+                                    </h:panelGroup>
                                 </div>
                             </div>
                         </div>
                     </ui:repeat>
-                </div>
+                </h:panelGroup>
 
                 <!-- Input -->
                 <div class="chat-input-zone">
-                    <h:form id="chatForm" styleClass="chat-input-form">
-                        <div class="chat-input-wrap">
-                            <h:inputTextarea id="msgInput"
-                                             value="#{messagerieBean.nouveauMessage}"
-                                             styleClass="chat-input-field"
-                                             placeholder="Write a message... (Enter to send)"
-                                             rows="1"
-                                             onkeydown="if(event.key==='Enter'&amp;&amp;!event.shiftKey){event.preventDefault();document.getElementById('chatForm:sendBtn').click();}"/>
+                    <h:form id="chatForm">
+                        <div class="input-row">
+                            <div class="input-box-wrap">
+                                <h:inputTextarea id="msgInput"
+                                                 value="#{messagerieBean.nouveauMessage}"
+                                                 styleClass="chat-input-field"
+                                                 placeholder="Type a message"
+                                                 rows="1"
+                                                 onkeydown="handleEnter(event)"/>
+                            </div>
+
+                            <!-- ══ BOUTON SEND avec icône SVG WhatsApp ══ -->
+                            <div class="send-btn-outer">
+                                <!-- Visuel décoratif avec l'icône -->
+                                <div class="send-btn-visual">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         width="20" height="20"
+                                         viewBox="0 0 24 24"
+                                         fill="white">
+                                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                                    </svg>
+                                </div>
+                                <!-- Bouton JSF transparent par-dessus -->
+                                <h:commandButton id="sendBtn"
+                                                 action="#{messagerieBean.envoyerMessage}"
+                                                 styleClass="chat-send-btn"
+                                                 value=" ">
+                                    <f:ajax execute="@form"
+                                            render=":chatMessages :chatForm:msgInput"
+                                            onevent="afterSend"/>
+                                </h:commandButton>
+                            </div>
+
                         </div>
-                        <h:commandButton id="sendBtn"
-                                         action="#{messagerieBean.envoyerMessage}"
-                                         styleClass="chat-send-btn">
-                            <f:ajax execute="@form" render=":chatMessages :chatForm:msgInput"
-                                    onevent="onSent"/>
-                        </h:commandButton>
                     </h:form>
                 </div>
+
             </h:panelGroup>
         </div>
     </div>
 
     <script>
-        function onSent(data) {
-            if (data.status === 'success') {
-                setTimeout(function() {
-                    var el = document.getElementById('chatMessages');
-                    if (el) el.scrollTop = el.scrollHeight;
-                    // Reset textarea
-                    var ta = document.querySelector('.chat-input-field');
-                    if (ta) ta.style.height = 'auto';
-                }, 100);
-            }
-        }
-        window.addEventListener('load', function() {
+        function scrollBottom() {
             var el = document.getElementById('chatMessages');
             if (el) el.scrollTop = el.scrollHeight;
-            // Icône dans le bouton send
-            var btn = document.querySelector('.chat-send-btn');
-            if (btn) btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+        }
+
+        function afterSend(data) {
+            if (data.status === 'success') {
+                setTimeout(function() {
+                    scrollBottom();
+                    var ta = document.querySelector('.chat-input-field');
+                    if (ta) { ta.style.height = 'auto'; ta.focus(); }
+                }, 80);
+            }
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter' &amp;&amp; !e.shiftKey) {
+                e.preventDefault();
+                var btn = document.getElementById('chatForm:sendBtn');
+                if (btn) btn.click();
+            }
+        }
+
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('chat-input-field')) {
+                e.target.style.height = 'auto';
+                e.target.style.height = Math.min(e.target.scrollHeight, 100) + 'px';
+            }
         });
+
         function filterConv(val) {
             document.querySelectorAll('.conv-item').forEach(function(item) {
                 var name = (item.querySelector('.conv-name') || {}).textContent || '';
                 item.style.display = name.toLowerCase().includes(val.toLowerCase()) ? '' : 'none';
             });
         }
-        // Auto-resize textarea
-        document.addEventListener('input', function(e) {
-            if (e.target.classList.contains('chat-input-field')) {
-                e.target.style.height = 'auto';
-                e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
-            }
-        });
+
+        window.addEventListener('load', scrollBottom);
     </script>
+
 </h:body>
 </html>

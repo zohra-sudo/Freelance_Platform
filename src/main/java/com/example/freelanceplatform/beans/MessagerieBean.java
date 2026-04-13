@@ -145,6 +145,10 @@ public class MessagerieBean implements Serializable {
         User u = getInterlocutor(d);
         return u != null ? u.getNom() : "Unknown";
     }
+    public String formatTime(LocalDateTime dateTime) {
+        if (dateTime == null) return "";
+        return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+    }
 
     public String getInterlocutorPhoto(Discussion d) {
         User u = getInterlocutor(d);
