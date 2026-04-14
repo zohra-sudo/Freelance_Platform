@@ -190,11 +190,29 @@
             <li><a href="index.xhtml">Home</a></li>
             <li><a href="categories.xhtml" class="active">Categories</a></li>
             <li><a href="jobs.xhtml">Jobs</a></li>
-            <li><a href="about.xhtml">About</a></li>
+
+            <h:panelGroup rendered="#{authBean.connecte}">
+                <li>
+                    <h:link outcome="profil">
+                        <f:param name="id" value="#{authBean.userConnecte.id}" />
+                        Profil
+                    </h:link>
+                </li>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{not authBean.connecte}">
+                <li><a href="about.xhtml">About</a></li>
+            </h:panelGroup>
         </ul>
         <div class="nav-actions">
             <a href="creerPoste.xhtml" class="btn-primary">Post a Project</a>
-            <a href="dashboard.xhtml"  class="btn-outline">Dashboard</a>
+
+            <h:form style="display:inline; margin:0; padding:0;">
+                <h:commandLink action="#{authBean.deconnecter}"
+                               value="Déconnexion"
+                               styleClass="btn-outline"
+                               style="text-decoration:none; display:inline-block;" />
+            </h:form>
         </div>
     </nav>
 
