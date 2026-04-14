@@ -209,6 +209,16 @@
             text-decoration: none; transition: background 0.2s, color 0.2s;
             font-family: 'Inter', sans-serif;
         }
+        .btn-messages {
+            display: inline-flex; align-items: center; gap: 7px;
+            background: #fff; color: var(--text);
+            border: 1.5px solid #ddd; padding: 11px 20px;
+            border-radius: 50px; font-size: 0.9rem;
+            font-weight: 600; cursor: pointer;
+            text-decoration: none; transition: all 0.2s;
+            position: relative;
+        }
+        .btn-messages:hover { border-color: var(--primary); color: var(--primary); }
         .btn-view-all:hover { background: var(--primary); color: #fff; }
 
         /* ══ CTA DARK ══ */
@@ -260,6 +270,16 @@
         </ul>
         <div class="nav-actions">
             <a href="creerPoste.xhtml" class="btn-primary">Post a Project</a>
+
+            <!-- ✅ BOUTON MESSAGES avec icône -->
+            <h:panelGroup rendered="#{authBean.connecte}">
+                <a href="messagerie.xhtml" class="btn-messages">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                    </svg>
+                    Messages
+                </a>
+            </h:panelGroup>
 
             <h:panelGroup rendered="#{not authBean.connecte}">
                 <a href="login.xhtml" class="btn-outline">Connexion</a>
@@ -393,7 +413,7 @@
             <p>Discover the latest project requests from clients who need your skills</p>
         </div>
 
-        <ui:repeat value="#{projectBean.projects}" var="job" size="3">
+        <ui:repeat value="#{projectBean.projects}" var="job" >
             <div class="job-card">
                 <div class="job-card-header">
                     <div class="job-author">
