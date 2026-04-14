@@ -1,14 +1,14 @@
 package com.example.freelanceplatform.service;
 
 import com.example.freelanceplatform.entities.Project;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
 
-@ApplicationScoped
+@Stateless
 public class ProjectService {
 
     @PersistenceContext

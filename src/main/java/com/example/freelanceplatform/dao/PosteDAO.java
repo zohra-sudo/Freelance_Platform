@@ -25,4 +25,5 @@ public class PosteDAO extends GenericDAO<Poste> {
                         "SELECT p FROM Poste p WHERE p.statut = 'OUVERT'", Poste.class)
                 .getResultList();
     }
+
 }

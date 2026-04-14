@@ -280,8 +280,14 @@
 
                     <!-- Header -->
                     <div class="card-header">
-                        <div class="avatar-circle" style="background: #{freelancerBean.getAvatarColor(user.nom)};">
+                        <div class="avatar-circle" style="background: #{freelancerBean.getAvatarColor(user.nom)}; position: relative; overflow: hidden;">
+                            <h:graphicImage value="/#{user.photo}"
+                                            rendered="#{not empty user.photo}"
+                                            style="width: 100%; height: 100%; object-fit: cover;" />
+
+                            <h:panelGroup rendered="#{empty user.photo}">
                                 #{freelancerBean.getInitials(user.nom)}
+                            </h:panelGroup>
                         </div>
                         <div>
                             <div class="card-name">#{user.nom}</div>
