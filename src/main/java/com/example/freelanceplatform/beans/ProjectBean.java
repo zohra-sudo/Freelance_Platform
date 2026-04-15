@@ -149,7 +149,27 @@ public class ProjectBean implements Serializable {
             this.showAll = false;
         }
     }
+    public List<Project> getLatestProjectsForHome() {
+        List<Project> all = projectService.getAllProjects();
 
+        if (all == null || all.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // --- SEULE MODIFICATION : On trie par date du plus récent au plus ancien ---
+        List<Project> sortedProjects = all.stream()
+                .sorted((p1, p2) -> {
+                    if (p1.getCreatedAt() == null || p2.getCreatedAt() == null) return 0;
+                    return p2.getCreatedAt().compareTo(p1.getCreatedAt()); // Tri descendant
+                })
+                .collect(Collectors.toList());
+
+        // On limite à 3 maximum
+        if (sortedProjects.size() > 3) {
+            return sortedProjects.subList(0, 3);
+        }
+        return sortedProjects;
+    }
     // Getters & Setters
     public Project getProject() { return project; }
     public void setProject(Project project) { this.project = project; }

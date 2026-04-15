@@ -426,19 +426,19 @@
             <p>Discover the latest project requests from clients who need your skills</p>
         </div>
 
-        <ui:repeat value="#{projectBean.projects}" var="job" >
+        <ui:repeat value="#{projectBean.latestProjectsForHome}" var="job">
             <div class="job-card">
                 <div class="job-card-header">
                     <div class="job-author">
                         <h:panelGroup rendered="#{not empty job.author.photo}">
-                            <h:graphicImage value="/uploads/#{job.author.photo}" styleClass="avatar" />
+                            <img src="#{request.contextPath}/#{job.author.photo}"
+                                 class="avatar"
+                                 style="object-fit: cover; width: 42px; height: 42px; border-radius: 50%;" />
                         </h:panelGroup>
 
                         <h:panelGroup rendered="#{empty job.author.photo}">
-                            <div class="avatar" style="background: #C47D2B; display: flex; align-items: center; justify-content: center;">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                                </svg>
+                            <div class="avatar" style="background: #7B42F6; color: white; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 50%; font-weight: bold;">
+                                <h:outputText value="#{job.author.nom.substring(0,1).toUpperCase()}" />
                             </div>
                         </h:panelGroup>
 
@@ -446,20 +446,16 @@
                             <div class="author-name">
                                 <h:outputText value="#{not empty job.author ? job.author.nom : 'Utilisateur inconnu'}" />
                             </div>
-
                             <div class="author-time">
-                                <h:outputText value="#{job.createdAt}" rendered="#{not empty job.createdAt}">
+                                <h:outputText value="#{job.createdAt}">
                                     <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
                                 </h:outputText>
-                                <h:outputText value="Date inconnue" rendered="#{empty job.createdAt}" />
                             </div>
                         </div>
-                    </div>
-
-                    <span class="job-tag">#{job.category}</span>
-                </div>
-                <div class="job-title">#{job.title}</div>
+                    </div> <span class="job-tag">#{job.category}</span>
+                </div> <div class="job-title">#{job.title}</div>
                 <div class="job-desc">#{job.description}</div>
+
                 <div class="job-meta">
                     <span>Remote</span>
                     <span class="budget">$ #{job.budget} USD</span>
@@ -476,14 +472,12 @@
                         <f:param name="id" value="#{job.id}" />
                         More details
                     </h:link>
-
                     <h:link outcome="applyProject" styleClass="btn-apply">
                         <f:param name="id" value="#{job.id}" />
                         Apply
                     </h:link>
                 </div>
-            </div>
-        </ui:repeat>
+            </div> </ui:repeat>
 
         <div class="view-all-wrapper">
             <a href="jobs.xhtml" class="btn-view-all">View all jobs →</a>

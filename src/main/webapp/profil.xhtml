@@ -263,31 +263,94 @@
                 </div>
             </div>
 
-            <div class="card"><div class="card-p">
-                <div class="sec-title">
-                    <div class="sec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-                    About Me
-                </div>
-                <div class="about-txt">
-                    <h:outputText value="#{profilBean.user.bio}" rendered="#{not empty profilBean.user.bio}"/>
-                    <h:outputText value="Experienced professional ready to bring your vision to life." rendered="#{empty profilBean.user.bio}"/>
-                </div>
-            </div></div>
+            <div class="card">
+                <div class="card-p" style="position: relative;">
+                    <div class="sec-title">
+                        <div class="sec-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                        </div>
+                        About Me
+                        <h:panelGroup rendered="#{profilBean.monProfil}">
+                            <button type="button" onclick="toggleBioEdit()" class="port-edit-btn" style="margin-left: auto; border-radius: 20px; padding: 4px 12px;">
+                                ✎ Edit Bio
+                            </button>
+                        </h:panelGroup>
+                    </div>
 
-            <div class="card"><div class="card-p">
-                <div class="sec-title">
-                    <div class="sec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-                    Skills &amp; Expertise
+                    <h:form id="bioForm">
+                        <h:panelGroup id="bioDisplay">
+                            <div class="about-txt">
+                                <h:outputText value="#{profilBean.user.bio}" rendered="#{not empty profilBean.user.bio}"/>
+                                <h:outputText value="Experienced professional ready to bring your vision to life." rendered="#{empty profilBean.user.bio}"/>
+                            </div>
+                        </h:panelGroup>
+
+                        <h:panelGroup id="bioEditArea" style="display:none;">
+                            <h:inputTextarea value="#{profilBean.user.bio}" styleClass="edit-input"
+                                             style="width: 100%; min-height: 100px; margin-bottom: 10px; border-radius: 12px; display: block;"/>
+                            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                                <button type="button" onclick="toggleBioEdit()" class="edit-cancel" style="padding: 5px 15px; font-size: 0.8rem;">Annuler</button>
+                                <h:commandButton value="Enregistrer" action="#{profilBean.updateBio}" styleClass="edit-save"
+                                                 style="padding: 5px 15px; font-size: 0.8rem; flex: none; width: auto;">
+                                    <f:ajax execute="@form" render="bioDisplay bioEditArea" onevent="function(data){ if(data.status === 'success') toggleBioEdit(); }"/>
+                                </h:commandButton>
+                            </div>
+                        </h:panelGroup>
+                    </h:form>
                 </div>
-                <div class="skills-wrap">
-                    <ui:repeat value="#{profilBean.user.competences}" var="comp">
-                        <span class="skill">#{comp}</span>
-                    </ui:repeat>
-                    <h:panelGroup rendered="#{empty profilBean.user.competences}">
-                        <span style="color:#aaa;font-size:.88rem;">No skills listed yet.</span>
+            </div>
+
+            <div class="card">
+                <div class="card-p">
+                    <div class="sec-title">
+                        <div class="sec-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2">
+                                <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                        </div>
+                        Skills &amp; Expertise
+                    </div>
+
+                    <div class="skills-wrap">
+                        <ui:repeat value="#{profilBean.user.competences}" var="comp">
+                <span class="skill" style="display: inline-flex; align-items: center; gap: 8px;">
+                    #{comp}
+                    <h:panelGroup rendered="#{profilBean.monProfil}">
+                        <h:form style="display:inline;">
+                            <h:commandLink action="#{profilBean.supprimerCompetence(comp)}"
+                                           style="color: inherit; text-decoration: none; font-size: 1.1rem; line-height: 1; font-weight: bold;">
+                                ×
+                                <f:ajax render="@all" />
+                            </h:commandLink>
+                        </h:form>
+                    </h:panelGroup>
+                </span>
+                        </ui:repeat>
+
+                        <h:panelGroup rendered="#{empty profilBean.user.competences}">
+                            <span style="color:#aaa;font-size:.88rem;">No skills listed yet.</span>
+                        </h:panelGroup>
+                    </div>
+
+                    <h:panelGroup rendered="#{profilBean.monProfil}">
+                        <h:form id="skillAddForm">
+                            <div class="lang-add-row" style="margin-top: 20px; border-top: 1px dashed var(--border); padding-top: 15px;">
+                                <h:inputText value="#{profilBean.nouvelleCompetence}"
+                                             styleClass="lang-input"
+                                             placeholder="Add a skill (ex: Java, React)..." />
+                                <h:commandButton value="Add Skill"
+                                                 styleClass="lang-add-btn"
+                                                 action="#{profilBean.ajouterCompetence}">
+                                    <f:ajax execute="@form" render="@all" />
+                                </h:commandButton>
+                            </div>
+                        </h:form>
                     </h:panelGroup>
                 </div>
-            </div></div>
+            </div>
+
 
             <div class="card"><div class="card-p">
                 <div class="sec-title">
@@ -493,6 +556,35 @@
 
         function closeIfOutside(e) {
             if (e.target === document.getElementById('projectModal')) closeProjectModal();
+        }
+        function toggleBioEdit() {
+            const display = document.getElementById('bioForm:bioDisplay');
+            const edit = document.getElementById('bioForm:bioEditArea');
+
+            if (display.style.display === 'none') {
+                display.style.display = 'block';
+                edit.style.display = 'none';
+            } else {
+                display.style.display = 'none';
+                edit.style.display = 'block';
+            }
+        }
+        function handleAjaxEvent(data) {
+            if (data.status === 'success') {
+                // Une fois que JSF a mis à jour le DOM, on cache le formulaire d'édition
+                // et on remontre la bio mise à jour.
+                const display = document.getElementById('bioForm:bioDisplay');
+                const edit = document.getElementById('bioForm:bioEditArea');
+
+                display.style.display = 'block';
+                edit.style.display = 'none';
+            }
+        }
+
+        function onBioSave(data) {
+            if (data.status === 'success') {
+                toggleBioEdit(); // Ferme le formulaire automatiquement après la sauvegarde
+            }
         }
     </script>
 </h:body>
