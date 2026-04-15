@@ -594,6 +594,10 @@
 </h:head>
 
 <h:body>
+    <f:metadata>
+        <f:viewParam name="categorie" value="#{projectBean.selectedCategory}" />
+        <f:viewAction action="#{projectBean.filterOnLoad}" />
+    </f:metadata>
 
     <!-- ══ NAVBAR ══ -->
     <nav>
