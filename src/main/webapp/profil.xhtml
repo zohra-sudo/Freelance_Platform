@@ -246,20 +246,9 @@
                 <div class="hero-info">
                     <div class="hero-name">#{profilBean.user.nom}</div>
                     <div class="hero-role">#{profilBean.user.domaine}</div>
-                    <div class="hero-loc">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                        Remote · Worldwide
-                    </div>
-                    <div class="stars-row">
-                        <span class="s">★</span><span class="s">★</span><span class="s">★</span><span class="s">★</span><span class="se">★</span>
-                        <span class="rv">4.8</span><span class="rc">(42 reviews)</span>
-                    </div>
-                    <div class="stats-bar">
-                        <div class="stat"><div class="sl">Hourly Rate</div><div class="sv">$85<span class="su">/hr</span></div></div>
-                        <div class="stat"><div class="sl">Completed</div><div class="sv">#{profilBean.mesProjets.size()}</div></div>
-                        <div class="stat"><div class="sl">Success Rate</div><div class="sv">98<span class="su">%</span></div></div>
-                        <div class="stat"><div class="sl">Response</div><div class="sv">2<span class="su">h</span></div></div>
-                    </div>
+
+
+
                 </div>
             </div>
 
@@ -440,32 +429,42 @@
             </div></div>
 
             <!-- LANGUES avec formulaire JSF -->
-            <div class="card"><div class="card-p">
-                <div class="sec-title" style="font-size:.92rem;margin-bottom:14px;">Languages</div>
-                <div class="lang-wrap">
-                    <ui:repeat value="#{profilBean.user.langues}" var="lang">
-                        <span class="lang">
-                            #{lang}
-                            <h:panelGroup rendered="#{profilBean.monProfil}">
-                                <h:form style="display:inline;">
-                                    <h:commandButton value="×" styleClass="lang-del" action="#{profilBean.supprimerLangue(lang)}"/>
-                                </h:form>
+            <div class="card">
+                <div class="card-p">
+                    <div class="sec-title" style="font-size:.92rem;margin-bottom:14px;">Languages</div>
+
+                    <h:panelGroup id="langSection">
+                        <div class="lang-wrap">
+                            <ui:repeat value="#{profilBean.user.langues}" var="lang">
+                                <span class="lang">
+                                    #{lang}
+                                    <h:panelGroup rendered="#{profilBean.monProfil}">
+                                        <h:form style="display:inline;">
+                                            <h:commandButton value="×" styleClass="lang-del" action="#{profilBean.supprimerLangue(lang)}">
+                                                <f:ajax render=":langSection" />
+                                            </h:commandButton>
+                                        </h:form>
+                                    </h:panelGroup>
+                                </span>
+                            </ui:repeat>
+                            <h:panelGroup rendered="#{empty profilBean.user.langues}">
+                                <span style="color:#aaa;font-size:0.82rem;">No languages listed.</span>
                             </h:panelGroup>
-                        </span>
-                    </ui:repeat>
-                    <h:panelGroup rendered="#{empty profilBean.user.langues}">
-                        <span style="color:#aaa;font-size:0.82rem;">No languages listed.</span>
+                        </div>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{profilBean.monProfil}">
+                        <h:form id="addLangForm">
+                            <div class="lang-add-row">
+                                <h:inputText value="#{profilBean.nouvelleLangue}" styleClass="lang-input" placeholder="Add a language..."/>
+                                <h:commandButton value="Add" styleClass="lang-add-btn" action="#{profilBean.ajouterLangue}">
+                                    <f:ajax execute="@form" render=":langSection @form" />
+                                </h:commandButton>
+                            </div>
+                        </h:form>
                     </h:panelGroup>
                 </div>
-                <h:panelGroup rendered="#{profilBean.monProfil}">
-                    <h:form>
-                        <div class="lang-add-row">
-                            <h:inputText value="#{profilBean.nouvelleLangue}" styleClass="lang-input" placeholder="Add a language..."/>
-                            <h:commandButton value="Add" styleClass="lang-add-btn" action="#{profilBean.ajouterLangue}"/>
-                        </div>
-                    </h:form>
-                </h:panelGroup>
-            </div></div>
+            </div>
         </div>
     </div>
 

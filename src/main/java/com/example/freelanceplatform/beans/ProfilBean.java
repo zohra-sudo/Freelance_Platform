@@ -115,35 +115,31 @@ public class ProfilBean implements Serializable {
     public void ajouterLangue() {
         if (nouvelleLangue == null || nouvelleLangue.trim().isEmpty()) return;
         if (!isMonProfil()) return;
-        User u = authBean.getUserConnecte();
-        if (u.getLangues() == null) u.setLangues(new ArrayList<>());
+
+        if (user.getLangues() == null) user.setLangues(new ArrayList<>());
         String langue = nouvelleLangue.trim();
-        if (!u.getLangues().contains(langue)) {
-            u.getLangues().add(langue);
-            userService.modifierProfil(u);
-            user = userService.findById(userId);
-            authBean.setUserConnecte(user);
+
+        if (!user.getLangues().contains(langue)) {
+            user.getLangues().add(langue);
+            // Utilisation de UserDAO pour sauvegarder physiquement en base
+            this.user = UserDAO.update(this.user);
+            // Mise à jour de la session pour rester synchronisé
+            authBean.setUserConnecte(this.user);
         }
         nouvelleLangue = null;
-        // Ajouter un message de succès
-        FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Langue ajoutée avec succès", null));
     }
 
     public void supprimerLangue(String langue) {
         if (!isMonProfil()) return;
-        User u = authBean.getUserConnecte();
-        if (u.getLangues() != null) {
-            u.getLangues().remove(langue);
-            userService.modifierProfil(u);
-            user = userService.findById(userId);
-            authBean.setUserConnecte(user);
-        }
-        // Ajouter un message de succès
-        FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Langue supprimée avec succès", null));
-    }
 
+        if (user.getLangues() != null) {
+            user.getLangues().remove(langue);
+            // Utilisation de UserDAO pour sauvegarder physiquement en base
+            this.user = UserDAO.update(this.user);
+            // Mise à jour de la session
+            authBean.setUserConnecte(this.user);
+        }
+    }
     // Méthode pour éditer un projet (appelée depuis le bouton Edit)
     public void editerProjet(Long projectId) {
         if (projectId == null) {
