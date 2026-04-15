@@ -25,6 +25,9 @@
             --bg: #fcfaf7;
             --white: #ffffff;
             --border: #eee;
+            --success: #2e7d32;
+            --success-bg: #e8f5e9;
+            --success-border: #c8e6c9;
         }
 
         body {
@@ -124,10 +127,12 @@
             border-radius: 16px;
             padding: 14px;
             font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
         }
 
         .form-textarea {
             min-height: 140px;
+            resize: vertical;
         }
 
         .submit-btn {
@@ -154,6 +159,61 @@
             text-decoration: none;
         }
 
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .message-success {
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid var(--success-border);
+        }
+
+        .message-error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        .message-warn {
+            background: #fff8e1;
+            color: #f57f17;
+            border: 1px solid #ffecb3;
+        }
+
+        .message-icon {
+            font-size: 1.2rem;
+        }
+
+        .btn-redirect {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .btn-redirect:hover {
+            background: var(--primary-hover);
+        }
+
+        .success-card {
+            text-align: center;
+        }
     </style>
 </h:head>
 
@@ -171,29 +231,55 @@
             <li><a href="index.xhtml">Home</a></li>
             <li><a href="categories.xhtml">Categories</a></li>
             <li><a href="jobs.xhtml">Jobs</a></li>
+            <h:panelGroup rendered="#{authBean.connecte}">
+                <li>
+                    <h:link outcome="profil">
+                        <f:param name="id" value="#{authBean.userConnecte.id}" />
+                        Profil
+                    </h:link>
+                </li>
+            </h:panelGroup>
         </ul>
 
         <div class="nav-actions">
             <a href="creerPoste.xhtml" class="btn-primary">Post a Project</a>
+            <h:panelGroup rendered="#{authBean.connecte}">
+                <h:form style="display:inline; margin:0;">
+                    <h:commandButton value="Déconnexion" action="#{authBean.deconnecter}" styleClass="btn-outline" />
+                </h:form>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{not authBean.connecte}">
+                <a href="login.xhtml" class="btn-outline">Connexion</a>
+            </h:panelGroup>
             <a href="jobs.xhtml" class="btn-outline">Retour</a>
         </div>
     </nav>
 
     <div class="page-wrapper">
 
-        <ui:fragment rendered="#{not empty applicationBean.project}">
-            <div class="card">
+        <!-- Affichage des messages JSF -->
+        <div class="messages">
+            <h:messages globalOnly="true"
+                        infoClass="message message-success"
+                        errorClass="message message-error"
+                        warnClass="message message-warn" />
+        </div>
 
+        <!-- Formulaire de candidature (affiché seulement si projet existe ET candidature non encore envoyée) -->
+        <ui:fragment rendered="#{not empty applicationBean.project and not applicationBean.candidatureEnvoyee}">
+            <div class="card">
                 <div class="title">
                     Postuler à : #{applicationBean.project.title}
                 </div>
 
                 <h:form enctype="multipart/form-data">
 
+                    <!-- Champ caché pour conserver l'ID du projet -->
+                    <h:inputHidden value="#{applicationBean.projectId}" />
+
                     <!-- MESSAGE -->
                     <div class="form-group">
                         <label class="form-label">Message de motivation *</label>
-
                         <h:inputTextarea value="#{applicationBean.application.message}"
                                          styleClass="form-textarea"
                                          required="true"
@@ -204,15 +290,12 @@
                     <!-- CV -->
                     <div class="form-group">
                         <label class="form-label">CV (PDF)</label>
-
                         <h:inputFile value="#{applicationBean.cvFile}" />
-
                     </div>
 
                     <!-- PORTFOLIO -->
                     <div class="form-group">
                         <label class="form-label">Lien portfolio (optionnel)</label>
-
                         <h:inputText value="#{applicationBean.application.portfolioLink}"
                                      styleClass="form-input"
                                      pt:placeholder="https://portfolio.com" />
@@ -221,7 +304,6 @@
                     <!-- TELEPHONE -->
                     <div class="form-group">
                         <label class="form-label">Téléphone</label>
-
                         <h:inputText value="#{applicationBean.application.phone}"
                                      styleClass="form-input"
                                      pt:placeholder="+212..." />
@@ -234,13 +316,30 @@
                     <a href="jobs.xhtml" class="cancel-link">Annuler</a>
 
                 </h:form>
-
             </div>
         </ui:fragment>
 
+        <!-- Message de succès après envoi de la candidature -->
+        <ui:fragment rendered="#{applicationBean.candidatureEnvoyee}">
+            <div class="card success-card">
+                <div class="message message-success" style="margin-bottom: 20px;">
+                    <span class="message-icon">✓</span>
+                    <strong>Félicitations !</strong> Votre candidature a été envoyée avec succès.
+                </div>
+                <p style="margin-bottom: 20px; color: var(--text-muted);">
+                    Le propriétaire du projet va examiner votre profil et vous recontactera si votre profil correspond à ses attentes.
+                </p>
+                <a href="jobs.xhtml" class="btn-redirect">Voir d'autres offres</a>
+                <a href="profil.xhtml?id=#{authBean.userConnecte.id}" class="cancel-link" style="margin-top: 15px;">Voir mes candidatures</a>
+            </div>
+        </ui:fragment>
+
+        <!-- Message si projet introuvable -->
         <ui:fragment rendered="#{empty applicationBean.project}">
             <div class="card">
-                Projet introuvable.
+                <p style="text-align: center; color: var(--text-muted);">Projet introuvable.</p>
+                <p style="margin-top: 15px; text-align: center;">Vérifiez que l'URL contient l'ID du projet: <strong>?id=1</strong></p>
+                <a href="jobs.xhtml" class="cancel-link">Retour aux offres</a>
             </div>
         </ui:fragment>
 

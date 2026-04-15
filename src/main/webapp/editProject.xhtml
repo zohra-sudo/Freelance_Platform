@@ -3,6 +3,11 @@
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core">
 
+<f:metadata>
+    <f:viewParam name="id" value="#{editProjectBean.projectId}" />
+    <f:viewAction action="#{editProjectBean.loadProject}" />
+</f:metadata>
+
 <h:head>
     <title>Edit Project - Freelance Platform</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -42,42 +47,45 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h1>#{profilBean.projectEnEdition.id == null ? 'Add a New Project' : 'Edit Project'}</h1>
+                <h1>#{editProjectBean.projectEnEdition == null ? 'Add a New Project' : (editProjectBean.projectEnEdition.id == null ? 'Add a New Project' : 'Edit Project')}</h1>
             </div>
             <div class="card-body">
                 <h:messages globalOnly="true" infoClass="message message-info" errorClass="message message-error"/>
 
-                <h:form>
+                <h:form id="editProjectForm" prependId="true">
+                    <!-- Champ caché pour l'ID -->
+                    <h:inputHidden value="#{editProjectBean.projectId}" />
+
                     <div class="form-group">
                         <label>Project Title</label>
-                        <h:inputText value="#{profilBean.projectEnEdition.title}" styleClass="form-control" required="true" requiredMessage="Title is required"/>
+                        <h:inputText value="#{editProjectBean.projectEnEdition.title}" styleClass="form-control" required="true" requiredMessage="Title is required"/>
                     </div>
 
                     <div class="form-group">
                         <label>Description</label>
-                        <h:inputTextarea value="#{profilBean.projectEnEdition.description}" styleClass="form-control" rows="4" required="true" requiredMessage="Description is required"/>
+                        <h:inputTextarea value="#{editProjectBean.projectEnEdition.description}" styleClass="form-control" rows="4" required="true" requiredMessage="Description is required"/>
                     </div>
 
                     <div class="form-group">
                         <label>Category</label>
-                        <h:inputText value="#{profilBean.projectEnEdition.category}" styleClass="form-control" required="true" requiredMessage="Category is required"/>
+                        <h:inputText value="#{editProjectBean.projectEnEdition.category}" styleClass="form-control" required="true" requiredMessage="Category is required"/>
                     </div>
 
                     <div class="form-group">
                         <label>Budget ($)</label>
-                        <h:inputText value="#{profilBean.projectEnEdition.budget}" styleClass="form-control" required="true" requiredMessage="Budget is required">
+                        <h:inputText value="#{editProjectBean.projectEnEdition.budget}" styleClass="form-control" required="true" requiredMessage="Budget is required">
                             <f:convertNumber pattern="#0.00" />
                         </h:inputText>
                     </div>
 
                     <div class="form-group">
                         <label>Skills (comma separated)</label>
-                        <h:inputText value="#{profilBean.projectEnEdition.skills}" styleClass="form-control" placeholder="React, Node.js, PostgreSQL"/>
+                        <h:inputText value="#{editProjectBean.projectEnEdition.skills}" styleClass="form-control" placeholder="React, Node.js, PostgreSQL"/>
                     </div>
 
                     <div class="form-actions">
-                        <h:commandButton value="Cancel" styleClass="btn-secondary" action="#{profilBean.annulerEdition}" immediate="true"/>
-                        <h:commandButton value="Save Project" styleClass="btn-primary" action="#{profilBean.sauvegarderProjet}"/>
+                        <h:commandButton value="Cancel" styleClass="btn-secondary" action="#{editProjectBean.annulerEdition}" immediate="true"/>
+                        <h:commandButton value="Save Project" styleClass="btn-primary" action="#{editProjectBean.sauvegarderProjet}" />
                     </div>
                 </h:form>
             </div>
