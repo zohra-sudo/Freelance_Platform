@@ -594,6 +594,10 @@
 </h:head>
 
 <h:body>
+    <f:metadata>
+        <f:viewParam name="categorie" value="#{projectBean.selectedCategory}" />
+        <f:viewAction action="#{projectBean.filterOnLoad}" />
+    </f:metadata>
 
     <!-- ══ NAVBAR ══ -->
     <nav>
@@ -820,7 +824,7 @@
     </div>
 
     <div class="footer-bottom">
-        <p>© 2024 Freelance Platform. All rights reserved.</p>
+        <p>©️ 2024 Freelance Platform. All rights reserved.</p>
 
         <div class="footer-socials">
             <a href="#">Twitter</a>

@@ -33,6 +33,12 @@ public class User implements Serializable {
     @Column(name = "competence")
     private List<String> competences;
 
+    // ✅ NOUVEAU — langues parlées
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_langues", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "langue")
+    private List<String> langues;
+
     public User() {}
 
     // Getters & Setters
@@ -54,4 +60,6 @@ public class User implements Serializable {
     public void setCompetences(List<String> competences) { this.competences = competences; }
     public String getPhoto() { return photo; }
     public void setPhoto(String photo) { this.photo = photo; }
+    public List<String> getLangues() { return langues; }
+    public void setLangues(List<String> langues) { this.langues = langues; }
 }

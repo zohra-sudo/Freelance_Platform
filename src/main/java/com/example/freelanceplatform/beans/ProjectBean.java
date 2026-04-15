@@ -141,6 +141,14 @@ public class ProjectBean implements Serializable {
     public String goToProjectDetails(Long id) {
         return "projectDetails?faces-redirect=true&id=" + id;
     }
+    // Ajoute cette méthode pour capturer le paramètre au chargement de la page
+    public void filterOnLoad() {
+        // Si selectedCategory a été injecté par l'URL (via f:viewParam),
+        // on s'assure que l'affichage démarre proprement.
+        if (selectedCategory != null && !selectedCategory.trim().isEmpty()) {
+            this.showAll = false;
+        }
+    }
 
     // Getters & Setters
     public Project getProject() { return project; }

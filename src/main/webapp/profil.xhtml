@@ -18,31 +18,25 @@
             --radius: 18px;
         }
         body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); }
-
         nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 60px; background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
         .nav-logo { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.6rem; color: var(--primary); text-decoration: none; }
         .nav-links { display: flex; gap: 36px; list-style: none; }
         .nav-links a { text-decoration: none; color: var(--text); font-size: 0.95rem; font-weight: 500; }
-        .nav-links a:hover { color: var(--primary); }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
         .nav-actions { display: flex; gap: 12px; }
         .btn-pnav { background: var(--primary); color: #fff; padding: 11px 24px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; text-decoration: none; }
         .btn-pnav:hover { background: var(--primary-hover); color: #fff; }
         .btn-onav { background: var(--white); color: var(--text); border: 1.5px solid #ddd; padding: 11px 24px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; text-decoration: none; }
         .btn-onav:hover { border-color: var(--primary); color: var(--primary); }
-
         .breadcrumb { padding: 18px 60px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); }
         .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 500; }
-
         .layout { display: flex; gap: 28px; padding: 0 60px 70px; align-items: flex-start; }
         .main-col { flex: 1; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
         .side-col { width: 290px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; position: sticky; top: 88px; }
-
         .card { background: var(--white); border-radius: var(--radius); border: 1px solid #eee; overflow: hidden; }
         .card-p { padding: 28px; }
         .sec-title { font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
         .sec-icon { width: 30px; height: 30px; background: var(--primary-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-
-        /* BANNIÈRE */
         .banner { height: 155px; position: relative; overflow: hidden; background: linear-gradient(135deg, #fdf6ee 0%, #f0e0c4 60%, #e8d0a8 100%); }
         .banner::before { content: ''; position: absolute; width: 280px; height: 280px; border-radius: 50%; border: 40px solid rgba(196,125,43,0.08); top: -80px; right: -40px; }
         .banner::after { content: ''; position: absolute; width: 160px; height: 160px; border-radius: 50%; background: rgba(196,125,43,0.07); bottom: -60px; left: 120px; }
@@ -50,31 +44,15 @@
         .banner-badge { position: absolute; top: 22px; right: 24px; background: rgba(255,255,255,0.85); backdrop-filter: blur(6px); border: 1px solid rgba(196,125,43,0.2); padding: 8px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; }
         .banner-badge-dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; }
         .banner-word { position: absolute; bottom: 16px; left: 28px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 3.5rem; font-weight: 700; color: rgba(196,125,43,0.12); line-height: 1; user-select: none; }
-
-        /* AVATAR */
         .avatar-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: -46px; margin-bottom: 18px; padding: 0 28px; }
         .avatar-wrap { position: relative; cursor: pointer; display: inline-block; }
-        .avatar-circle {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            border: 4px solid var(--white);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-            background-color: #eee;
-            z-index: 5;
-        }
+        .avatar-circle { width: 90px; height: 90px; border-radius: 50%; border: 4px solid var(--white); box-shadow: 0 6px 20px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700; color: var(--white); overflow: hidden; transition: transform 0.2s; }
         .avatar-wrap:hover .avatar-circle { transform: scale(1.04); }
         .avatar-img { width: 100%; height: 100%; object-fit: cover; }
         .avatar-hover { position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,0.42); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; gap: 3px; pointer-events: none; }
         .avatar-wrap:hover .avatar-hover { opacity: 1; }
         .avatar-hover span { color: #fff; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em; }
         .verified-badge { display: inline-flex; align-items: center; gap: 6px; background: #e8f5e9; color: #2e7d32; padding: 7px 16px; border-radius: 50px; font-size: 0.78rem; font-weight: 700; border: 1px solid #c8e6c9; }
-
         .hero-info { padding: 0 28px 24px; }
         .hero-name { font-size: 1.7rem; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
         .hero-role { color: var(--primary); font-size: 1rem; font-weight: 600; margin-bottom: 12px; }
@@ -90,155 +68,91 @@
         .sl { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
         .sv { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
         .su { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
-
         .about-txt { color: #555; font-size: 0.93rem; line-height: 1.85; }
         .skills-wrap { display: flex; flex-wrap: wrap; gap: 10px; }
-        .skill { background: var(--primary-light); color: var(--primary); padding: 8px 18px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; border: 1.5px solid rgba(196,125,43,0.2); transition: all 0.2s; cursor: default; }
+        .skill { background: var(--primary-light); color: var(--primary); padding: 8px 18px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; border: 1.5px solid rgba(196,125,43,0.2); transition: all 0.2s; }
         .skill:hover { background: var(--primary); color: var(--white); transform: translateY(-2px); }
-
         .port-list { display: flex; flex-direction: column; gap: 14px; }
         .port-item { background: var(--bg); border-radius: 12px; padding: 18px 20px; border: 1.5px solid var(--border); transition: all 0.2s; display: flex; align-items: flex-start; gap: 16px; }
-        .port-item:hover { border-color: var(--primary); box-shadow: 0 6px 20px rgba(196,125,43,0.1); transform: translateX(4px); }
+        .port-item:hover { border-color: var(--primary); box-shadow: 0 6px 20px rgba(196,125,43,0.1); }
         .port-num { width: 36px; height: 36px; background: var(--primary-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--primary); font-size: 0.83rem; flex-shrink: 0; }
+        .port-info { flex: 1; }
         .port-info h4 { font-size: 0.94rem; font-weight: 700; color: var(--dark); margin-bottom: 5px; }
         .port-info p { color: var(--text-muted); font-size: 0.83rem; line-height: 1.6; margin-bottom: 8px; }
-        .port-link { color: var(--primary); font-size: 0.82rem; font-weight: 600; text-decoration: none; }
-
-        /* SIDEBAR */
+        .port-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .port-link { color: var(--primary); font-size: 0.82rem; font-weight: 600; text-decoration: none; cursor: pointer; background: none; border: none; font-family: 'Inter', sans-serif; }
+        .port-link:hover { text-decoration: underline; }
+        .port-edit-btn { color: var(--text-muted); font-size: 0.78rem; font-weight: 500; background: none; border: 1px solid var(--border); border-radius: 6px; padding: 3px 10px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+        .port-edit-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-add-project { display: flex; align-items: center; gap: 8px; width: 100%; padding: 14px; background: var(--bg); border: 2px dashed var(--border); border-radius: 12px; color: var(--text-muted); font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; justify-content: center; }
+        .btn-add-project:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+        .lang-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+        .lang { background: var(--bg); border: 1.5px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 50px; font-size: 0.82rem; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .lang-del { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.9rem; line-height: 1; padding: 0; }
+        .lang-del:hover { color: #dc2626; }
+        .lang-add-row { display: flex; gap: 8px; margin-top: 10px; }
+        .lang-input { flex: 1; padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 50px; font-size: 0.85rem; font-family: 'Inter', sans-serif; outline: none; }
+        .lang-input:focus { border-color: var(--primary); }
+        .lang-add-btn { padding: 8px 16px; background: var(--primary); color: #fff; border: none; border-radius: 50px; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+        .lang-add-btn:hover { background: var(--primary-hover); }
         .avail-dot-s { display: inline-block; width: 8px; height: 8px; background: #22c55e; border-radius: 50%; margin-right: 6px; }
         .avail-lbl { font-size: 0.77rem; color: var(--text-muted); margin-bottom: 8px; }
         .avail-status { font-size: 0.96rem; font-weight: 700; color: var(--dark); margin-bottom: 18px; }
-
-        .btn-msg {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            width: 100%; padding: 13px; background: var(--primary); color: var(--white);
-            border: none; border-radius: 12px; font-size: 0.91rem; font-weight: 600;
-            cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
-            margin-bottom: 10px; box-shadow: 0 4px 14px rgba(196,125,43,0.3);
-            text-decoration: none;
-        }
+        .btn-msg { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px; background: var(--primary); color: var(--white); border: none; border-radius: 12px; font-size: 0.91rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; margin-bottom: 10px; box-shadow: 0 4px 14px rgba(196,125,43,0.3); text-decoration: none; }
         .btn-msg:hover { background: var(--primary-hover); color: var(--white); transform: translateY(-1px); }
-        .btn-inv { display: block; width: 100%; padding: 12px; background: var(--white); color: var(--dark); border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.91rem; font-weight: 600; text-align: center; text-decoration: none; transition: all 0.2s; }
-        .btn-inv:hover { border-color: var(--primary); color: var(--primary); }
-
+        .btn-edit-profil { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; background: var(--white); color: var(--dark); border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.91rem; font-weight: 600; text-decoration: none; transition: all 0.2s; text-align: center; cursor: pointer; font-family: 'Inter', sans-serif; }
+        .btn-edit-profil:hover { border-color: var(--primary); color: var(--primary); }
         .info-list { display: flex; flex-direction: column; gap: 14px; }
         .info-row { display: flex; align-items: center; gap: 12px; }
         .info-ico { width: 36px; height: 36px; background: var(--primary-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .il { font-size: 0.71rem; color: var(--text-muted); margin-bottom: 1px; }
         .iv { font-size: 0.87rem; font-weight: 600; color: var(--dark); word-break: break-all; }
-
-        .lang-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
-        .lang { background: var(--bg); border: 1.5px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 50px; font-size: 0.82rem; font-weight: 500; }
-
-        /* Toast */
+        .proj-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .proj-modal-overlay.open { display: flex; }
+        .proj-modal { background: var(--white); border-radius: 20px; width: 100%; max-width: 580px; max-height: 88vh; overflow-y: auto; box-shadow: 0 24px 60px rgba(0,0,0,0.2); animation: slideUp 0.25s ease; }
+        @keyframes slideUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+        .proj-modal-banner { height: 100px; background: linear-gradient(135deg, #fdf6ee, #f0e0c4, #e8d0a8); position: relative; border-radius: 20px 20px 0 0; overflow: hidden; }
+        .proj-modal-banner-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(196,125,43,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(196,125,43,0.07) 1px, transparent 1px); background-size: 28px 28px; }
+        .proj-modal-body { padding: 24px 28px 28px; }
+        .proj-modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .proj-modal-title { font-size: 1.2rem; font-weight: 800; color: var(--dark); flex: 1; padding-right: 12px; }
+        .proj-modal-close { width: 32px; height: 32px; border-radius: 50%; background: var(--bg); border: none; cursor: pointer; font-size: 1.2rem; color: var(--text-muted); flex-shrink: 0; transition: background 0.2s; }
+        .proj-modal-close:hover { background: #eee; color: var(--dark); }
+        .proj-modal-cat { display: inline-flex; align-items: center; gap: 6px; background: var(--primary-light); color: var(--primary); padding: 5px 14px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; margin-bottom: 14px; }
+        .proj-modal-desc { color: #555; font-size: 0.92rem; line-height: 1.8; margin-bottom: 20px; }
+        .proj-modal-stats { display: flex; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+        .proj-stat { flex: 1; padding: 14px; text-align: center; border-right: 1px solid var(--border); }
+        .proj-stat:last-child { border-right: none; }
+        .proj-stat-lbl { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+        .proj-stat-val { font-size: 1.05rem; font-weight: 800; color: var(--primary); }
+        .proj-modal-skills-title { font-size: 0.85rem; font-weight: 700; color: var(--dark); margin-bottom: 10px; }
+        .proj-modal-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .proj-modal-skill { background: var(--primary-light); color: var(--primary); padding: 6px 14px; border-radius: 50px; font-size: 0.82rem; font-weight: 600; border: 1.5px solid rgba(196,125,43,0.2); }
+        .proj-modal-actions { display: flex; gap: 12px; }
+        .proj-btn-apply { flex: 1; padding: 12px; background: var(--primary); color: var(--white); border: none; border-radius: 12px; font-size: 0.91rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; box-shadow: 0 4px 14px rgba(196,125,43,0.3); transition: all 0.2s; text-decoration: none; text-align: center; }
+        .proj-btn-apply:hover { background: var(--primary-hover); color: var(--white); }
+        .proj-btn-cancel { padding: 12px 22px; background: var(--white); color: var(--text); border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.91rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+        .proj-btn-cancel:hover { border-color: var(--text-muted); }
+        .edit-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 600; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .edit-modal-overlay.open { display: flex; }
+        .edit-modal { background: var(--white); border-radius: 20px; width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; padding: 32px; box-shadow: 0 24px 60px rgba(0,0,0,0.2); animation: slideUp 0.25s ease; }
+        .edit-modal h3 { font-size: 1.1rem; font-weight: 800; color: var(--dark); margin-bottom: 20px; }
+        .edit-field { margin-bottom: 16px; }
+        .edit-field label { display: block; font-size: 0.84rem; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
+        .edit-input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none; }
+        .edit-input:focus { border-color: var(--primary); }
+        textarea.edit-input { resize: vertical; min-height: 80px; line-height: 1.6; }
+        .edit-actions { display: flex; gap: 12px; margin-top: 20px; }
+        .edit-save { flex: 1; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-size: 0.91rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+        .edit-save:hover { background: var(--primary-hover); }
+        .edit-cancel { padding: 12px 20px; background: var(--white); color: var(--text); border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.91rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
         .toast { position: fixed; bottom: 30px; right: 30px; background: #1a1a1a; color: #fff; padding: 14px 22px; border-radius: 12px; font-size: 0.88rem; font-weight: 500; display: none; align-items: center; gap: 10px; z-index: 999; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
         .toast.show { display: flex; animation: fadeIn 0.3s ease; }
         .toast-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; flex-shrink: 0; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-
-        .nav-links a.active {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        /* ── MODAL PROJECT ── */
-        .proj-modal-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.5); z-index: 500;
-            align-items: center; justify-content: center;
-            backdrop-filter: blur(4px);
-        }
-        .proj-modal-overlay.open { display: flex; }
-        .proj-modal {
-            background: var(--white); border-radius: 20px;
-            width: 100%; max-width: 600px; max-height: 85vh;
-            overflow-y: auto; padding: 0;
-            box-shadow: 0 24px 60px rgba(0,0,0,0.2);
-            animation: slideUp 0.25s ease;
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(24px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .proj-modal-banner {
-            height: 120px; background: linear-gradient(135deg, #fdf6ee, #f0e0c4, #e8d0a8);
-            position: relative; border-radius: 20px 20px 0 0; overflow: hidden;
-        }
-        .proj-modal-banner::before {
-            content: ''; position: absolute;
-            width: 200px; height: 200px; border-radius: 50%;
-            border: 30px solid rgba(196,125,43,0.1);
-            top: -60px; right: -30px;
-        }
-        .proj-modal-banner-grid {
-            position: absolute; inset: 0;
-            background-image: linear-gradient(rgba(196,125,43,0.07) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(196,125,43,0.07) 1px, transparent 1px);
-            background-size: 28px 28px;
-        }
-        .proj-modal-body { padding: 28px 32px 32px; }
-        .proj-modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-        .proj-modal-title { font-size: 1.3rem; font-weight: 800; color: var(--dark); line-height: 1.3; flex: 1; padding-right: 16px; }
-        .proj-modal-close {
-            width: 32px; height: 32px; border-radius: 50%;
-            background: var(--bg); border: none; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; color: var(--text-muted); flex-shrink: 0;
-            transition: background 0.2s;
-        }
-        .proj-modal-close:hover { background: #eee; color: var(--dark); }
-        .proj-modal-cat {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: var(--primary-light); color: var(--primary);
-            padding: 5px 14px; border-radius: 50px; font-size: 0.8rem;
-            font-weight: 600; margin-bottom: 16px;
-        }
-        .proj-modal-desc { color: #555; font-size: 0.92rem; line-height: 1.8; margin-bottom: 22px; }
-        .proj-modal-stats {
-            display: flex; gap: 0;
-            border: 1px solid var(--border); border-radius: 14px;
-            overflow: hidden; margin-bottom: 22px;
-        }
-        .proj-stat { flex: 1; padding: 16px; text-align: center; border-right: 1px solid var(--border); }
-        .proj-stat:last-child { border-right: none; }
-        .proj-stat-lbl { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
-        .proj-stat-val { font-size: 1.1rem; font-weight: 800; color: var(--primary); }
-        .proj-modal-skills-title { font-size: 0.85rem; font-weight: 700; color: var(--dark); margin-bottom: 10px; }
-        .proj-modal-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
-        .proj-modal-skill {
-            background: var(--primary-light); color: var(--primary);
-            padding: 6px 14px; border-radius: 50px; font-size: 0.82rem; font-weight: 600;
-            border: 1.5px solid rgba(196,125,43,0.2);
-        }
-        .proj-modal-author { display: flex; align-items: center; gap: 12px; padding: 16px; background: var(--bg); border-radius: 12px; margin-bottom: 22px; }
-        .proj-modal-author-avatar {
-            width: 44px; height: 44px; border-radius: 50%;
-            background: var(--primary); color: #fff;
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1rem;
-            overflow: hidden; flex-shrink: 0;
-        }
-        .proj-modal-author-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .proj-modal-author-lbl { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 2px; }
-        .proj-modal-author-name { font-size: 0.92rem; font-weight: 700; color: var(--dark); }
-        .proj-modal-actions { display: flex; gap: 12px; }
-        .proj-btn-apply {
-            flex: 1; padding: 13px; background: var(--primary); color: var(--white);
-            border: none; border-radius: 12px; font-size: 0.92rem; font-weight: 600;
-            cursor: pointer; font-family: 'Inter', sans-serif;
-            box-shadow: 0 4px 14px rgba(196,125,43,0.3); transition: all 0.2s;
-            text-decoration: none; text-align: center;
-        }
-        .proj-btn-apply:hover { background: var(--primary-hover); color: var(--white); transform: translateY(-1px); }
-        .proj-btn-cancel {
-            padding: 13px 24px; background: var(--white); color: var(--text);
-            border: 1.5px solid var(--border); border-radius: 12px;
-            font-size: 0.92rem; font-weight: 600; cursor: pointer;
-            font-family: 'Inter', sans-serif; transition: all 0.2s;
-        }
-        .proj-btn-cancel:hover { border-color: var(--text-muted); }
-
         .footer { background: #1a1a1a; color: #666; text-align: center; padding: 20px; font-size: 0.82rem; }
+        .error-msg { color: #dc2626; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+        .success-msg { color: #22c55e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
     </style>
 </h:head>
 
@@ -248,36 +162,32 @@
         <f:viewAction action="#{profilBean.loadUser}"/>
     </f:metadata>
 
-    <!-- NAVBAR -->
     <nav>
         <a href="index.xhtml" class="nav-logo">Freelance</a>
         <ul class="nav-links">
             <li><a href="index.xhtml">Home</a></li>
             <li><a href="categories.xhtml">Categories</a></li>
             <li><a href="jobs.xhtml">Jobs</a></li>
-
             <h:panelGroup rendered="#{authBean.connecte}">
                 <li>
                     <h:link outcome="profil" styleClass="active">
-                        <f:param name="id" value="#{authBean.userConnecte.id}" />
+                        <f:param name="id" value="#{authBean.userConnecte.id}"/>
                         Profil
                     </h:link>
                 </li>
             </h:panelGroup>
-
-            <h:panelGroup rendered="#{not authBean.connecte}">
-                <li><a href="about.xhtml">About</a></li>
-            </h:panelGroup>
         </ul>
         <div class="nav-actions">
             <a href="creerPoste.xhtml" class="btn-pnav">Post a Project</a>
-
-            <h:form style="display:inline; margin:0; padding:0;">
-                <h:commandLink action="#{authBean.deconnecter}"
-                               value="Déconnexion"
-                               styleClass="btn-onav"
-                               style="text-decoration:none; display:inline-block;" />
-            </h:form>
+            <h:panelGroup rendered="#{authBean.connecte}">
+                <h:form style="display:inline;margin:0;padding:0;">
+                    <h:commandLink action="#{authBean.deconnecter}" value="Déconnexion"
+                                   styleClass="btn-onav" style="text-decoration:none;display:inline-block;"/>
+                </h:form>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{not authBean.connecte}">
+                <a href="login.xhtml" class="btn-onav">Connexion</a>
+            </h:panelGroup>
         </div>
     </nav>
 
@@ -287,29 +197,26 @@
         <span>#{profilBean.user.nom}</span>
     </div>
 
+    <!-- Affichage des messages -->
+    <div style="padding: 0 60px;">
+        <h:messages globalOnly="true" styleClass="error-msg" infoStyle="success-msg" errorStyle="error-msg"/>
+    </div>
+
     <div class="layout">
         <div class="main-col">
-
-            <!-- HERO CARD -->
             <div class="card">
                 <div class="banner">
                     <div class="banner-grid"></div>
                     <div class="banner-word">Freelance</div>
-                    <div class="banner-badge">
-                        <div class="banner-badge-dot"></div>
-                        Open to work
-                    </div>
+                    <div class="banner-badge"><div class="banner-badge-dot"></div>Open to work</div>
                 </div>
                 <div class="avatar-row">
-                    <h:panelGroup rendered="#{authBean.connecte and authBean.userConnecte.id == profilBean.user.id}">
+                    <h:panelGroup rendered="#{profilBean.monProfil}">
                         <div class="avatar-wrap" onclick="document.getElementById('fileInput').click()">
                             <div class="avatar-circle" style="background: #{profilBean.avatarColor};">
-                                <h:graphicImage value="/#{profilBean.user.photo}"
-                                                styleClass="avatar-img"
-                                                rendered="#{not empty profilBean.user.photo}"/>
-
+                                <h:graphicImage value="/#{profilBean.user.photo}" styleClass="avatar-img" rendered="#{not empty profilBean.user.photo}"/>
                                 <h:panelGroup rendered="#{empty profilBean.user.photo}">
-                                    <span id="avatarInitials">#{profilBean.initials}</span>
+                                    <span>#{profilBean.initials}</span>
                                 </h:panelGroup>
                             </div>
                             <div class="avatar-hover">
@@ -323,76 +230,53 @@
                         <input type="file" id="fileInput" accept="image/*" style="display:none"
                                onchange="uploadPhoto(this, #{authBean.userConnecte.id})"/>
                     </h:panelGroup>
-
-                    <h:panelGroup rendered="#{not authBean.connecte or authBean.userConnecte.id != profilBean.user.id}">
-                        <div class="avatar-circle" style="background: #{profilBean.avatarColor}; cursor: default;">
-                            <h:graphicImage value="/#{profilBean.user.photo}"
-                                            styleClass="avatar-img"
-                                            rendered="#{not empty profilBean.user.photo}"/>
-
+                    <h:panelGroup rendered="#{not profilBean.monProfil}">
+                        <div class="avatar-circle" style="background: #{profilBean.avatarColor}; cursor:default;">
+                            <h:graphicImage value="/#{profilBean.user.photo}" styleClass="avatar-img" rendered="#{not empty profilBean.user.photo}"/>
                             <h:panelGroup rendered="#{empty profilBean.user.photo}">
                                 <span>#{profilBean.initials}</span>
                             </h:panelGroup>
                         </div>
                     </h:panelGroup>
-
                     <div class="verified-badge">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                            <polyline points="20 6 9 17 4 12"/>
-                        </svg>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                         Verified Profile
                     </div>
                 </div>
-
                 <div class="hero-info">
                     <div class="hero-name">#{profilBean.user.nom}</div>
                     <div class="hero-role">#{profilBean.user.domaine}</div>
                     <div class="hero-loc">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
-                            <circle cx="12" cy="10" r="3"/>
-                        </svg>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
                         Remote · Worldwide
                     </div>
                     <div class="stars-row">
-                        <span class="s">★</span><span class="s">★</span><span class="s">★</span>
-                        <span class="s">★</span><span class="se">★</span>
-                        <span class="rv">4.8</span>
-                        <span class="rc">(42 reviews)</span>
+                        <span class="s">★</span><span class="s">★</span><span class="s">★</span><span class="s">★</span><span class="se">★</span>
+                        <span class="rv">4.8</span><span class="rc">(42 reviews)</span>
                     </div>
                     <div class="stats-bar">
                         <div class="stat"><div class="sl">Hourly Rate</div><div class="sv">$85<span class="su">/hr</span></div></div>
-                        <div class="stat"><div class="sl">Completed</div><div class="sv">--</div></div>
+                        <div class="stat"><div class="sl">Completed</div><div class="sv">#{profilBean.mesProjets.size()}</div></div>
                         <div class="stat"><div class="sl">Success Rate</div><div class="sv">98<span class="su">%</span></div></div>
                         <div class="stat"><div class="sl">Response</div><div class="sv">2<span class="su">h</span></div></div>
                     </div>
                 </div>
             </div>
 
-            <!-- ABOUT -->
             <div class="card"><div class="card-p">
                 <div class="sec-title">
-                    <div class="sec-icon">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                        </svg>
-                    </div>
+                    <div class="sec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
                     About Me
                 </div>
                 <div class="about-txt">
                     <h:outputText value="#{profilBean.user.bio}" rendered="#{not empty profilBean.user.bio}"/>
-                    <h:outputText value="Experienced professional ready to bring your vision to life with high quality and attention to detail." rendered="#{empty profilBean.user.bio}"/>
+                    <h:outputText value="Experienced professional ready to bring your vision to life." rendered="#{empty profilBean.user.bio}"/>
                 </div>
             </div></div>
 
-            <!-- SKILLS -->
             <div class="card"><div class="card-p">
                 <div class="sec-title">
-                    <div class="sec-icon">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2">
-                            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-                        </svg>
-                    </div>
+                    <div class="sec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
                     Skills &amp; Expertise
                 </div>
                 <div class="skills-wrap">
@@ -405,78 +289,73 @@
                 </div>
             </div></div>
 
-            <!-- PORTFOLIO (Version mise à jour avec modal) -->
             <div class="card"><div class="card-p">
                 <div class="sec-title">
-                    <div class="sec-icon">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2">
-                            <rect x="2" y="7" width="20" height="14" rx="2"/>
-                            <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
-                        </svg>
-                    </div>
+                    <div class="sec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div>
                     Portfolio
+                    <span style="margin-left:auto;font-size:0.78rem;color:var(--text-muted);font-weight:400;">
+                        #{profilBean.mesProjets.size()} project(s)
+                    </span>
                 </div>
                 <div class="port-list">
-
-                    <!-- Projet 1 -->
-                    <div class="port-item">
-                        <div class="port-num">01</div>
-                        <div class="port-info" style="flex:1;">
-                            <h4>E-commerce Platform</h4>
-                            <p>Complete e-commerce platform with payment integration and real-time inventory management.</p>
-                            <a href="#" class="port-link" onclick="openProjectModal('E-commerce Platform',
-                                'Complete e-commerce platform with payment integration, real-time inventory management, and a responsive storefront. Built with React, Node.js, and PostgreSQL.',
-                                'Web Development', '4500', 'React, Node.js, PostgreSQL, Stripe, Redis', 'Sarah Johnson', '2024');">
-                                View Project →
-                            </a>
+                    <ui:repeat value="#{profilBean.mesProjets}" var="proj" varStatus="vs">
+                        <div class="port-item">
+                            <div class="port-num">
+                                <h:outputText value="0#{vs.index + 1}" rendered="#{vs.index + 1 lt 10}"/>
+                                <h:outputText value="#{vs.index + 1}" rendered="#{vs.index + 1 ge 10}"/>
+                            </div>
+                            <div class="port-info">
+                                <h4>#{proj.title}</h4>
+                                <p>#{proj.description}</p>
+                                <div class="port-actions">
+                                    <button class="port-link" type="button"
+                                            onclick="openProjectModal('#{proj.title}', '#{proj.description}', '#{proj.category}', '#{proj.budget}', '#{proj.skills}', '#{profilBean.user.nom}', '2024')">
+                                        View Project →
+                                    </button>
+                                    <h:panelGroup rendered="#{profilBean.monProfil}">
+                                        <h:form style="display:inline;">
+                                            <h:commandButton value="✎ Edit" styleClass="port-edit-btn" action="#{profilBean.editerProjet(proj.id)}"/>
+                                        </h:form>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Projet 2 -->
-                    <div class="port-item">
-                        <div class="port-num">02</div>
-                        <div class="port-info" style="flex:1;">
-                            <h4>Analytics Dashboard</h4>
-                            <p>Real-time analytics dashboard with advanced data visualization and reporting tools.</p>
-                            <a href="#" class="port-link" onclick="openProjectModal('Analytics Dashboard',
-                                'Real-time analytics dashboard featuring interactive charts, custom KPI tracking, data export, and role-based access control. Integrates with multiple data sources.',
-                                'UI/UX Design', '3200', 'Vue.js, D3.js, Python, FastAPI, MongoDB', 'Sarah Johnson', '2024');">
-                                View Project →
-                            </a>
+                    </ui:repeat>
+                    <h:panelGroup rendered="#{empty profilBean.mesProjets}">
+                        <div style="text-align:center;padding:20px;color:var(--text-muted);font-size:0.9rem;">
+                            No projects yet.
                         </div>
-                    </div>
-
-                    <!-- Projet 3 -->
-                    <div class="port-item">
-                        <div class="port-num">03</div>
-                        <div class="port-info" style="flex:1;">
-                            <h4>SaaS Application</h4>
-                            <p>Multi-tenant SaaS application with advanced features and scalable cloud architecture.</p>
-                            <a href="#" class="port-link" onclick="openProjectModal('SaaS Application',
-                                'Multi-tenant SaaS application with subscription management, team collaboration features, API access, and scalable cloud infrastructure on AWS.',
-                                'Web Development', '8000', 'React, TypeScript, AWS, Docker, Kubernetes', 'Sarah Johnson', '2024');">
-                                View Project →
-                            </a>
-                        </div>
-                    </div>
-
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{profilBean.monProfil}">
+                        <h:form>
+                            <h:commandButton styleClass="btn-add-project" value="+ Add a Project" action="#{profilBean.nouveauProjet}"/>
+                        </h:form>
+                    </h:panelGroup>
                 </div>
             </div></div>
         </div>
 
-        <!-- SIDEBAR -->
         <div class="side-col">
             <div class="card"><div class="card-p">
                 <div class="avail-lbl"><span class="avail-dot-s"></span>Availability</div>
                 <div class="avail-status">Available for full-time projects</div>
-
-                <a href="messagerie.xhtml?destinataire=#{profilBean.user.id}" class="btn-msg">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-                    </svg>
-                    Send Message
-                </a>
-                <a href="jobs.xhtml" class="btn-inv">Invite to Project</a>
+                <h:panelGroup rendered="#{profilBean.monProfil}">
+                    <a href="editProfil.xhtml" class="btn-edit-profil">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                        Edit My Profile
+                    </a>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{not profilBean.monProfil}">
+                    <a href="messagerie.xhtml?destinataire=#{profilBean.user.id}" class="btn-msg">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                        </svg>
+                        Send Message
+                    </a>
+                </h:panelGroup>
             </div></div>
 
             <div class="card"><div class="card-p">
@@ -497,82 +376,57 @@
                 </div>
             </div></div>
 
+            <!-- LANGUES avec formulaire JSF -->
             <div class="card"><div class="card-p">
                 <div class="sec-title" style="font-size:.92rem;margin-bottom:14px;">Languages</div>
                 <div class="lang-wrap">
-                    <span class="lang">English</span>
-                    <span class="lang">French</span>
-                    <span class="lang">Arabic</span>
+                    <ui:repeat value="#{profilBean.user.langues}" var="lang">
+                        <span class="lang">
+                            #{lang}
+                            <h:panelGroup rendered="#{profilBean.monProfil}">
+                                <h:form style="display:inline;">
+                                    <h:commandButton value="×" styleClass="lang-del" action="#{profilBean.supprimerLangue(lang)}"/>
+                                </h:form>
+                            </h:panelGroup>
+                        </span>
+                    </ui:repeat>
+                    <h:panelGroup rendered="#{empty profilBean.user.langues}">
+                        <span style="color:#aaa;font-size:0.82rem;">No languages listed.</span>
+                    </h:panelGroup>
                 </div>
+                <h:panelGroup rendered="#{profilBean.monProfil}">
+                    <h:form>
+                        <div class="lang-add-row">
+                            <h:inputText value="#{profilBean.nouvelleLangue}" styleClass="lang-input" placeholder="Add a language..."/>
+                            <h:commandButton value="Add" styleClass="lang-add-btn" action="#{profilBean.ajouterLangue}"/>
+                        </div>
+                    </h:form>
+                </h:panelGroup>
             </div></div>
         </div>
     </div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast">
-        <div class="toast-dot"></div>
-        <span id="toastMsg">Photo sauvegardée !</span>
-    </div>
-
-    <!-- MODAL PROJECT -->
+    <!-- MODAL VIEW PROJECT -->
     <div class="proj-modal-overlay" id="projectModal" onclick="closeIfOutside(event)">
-        <div class="proj-modal" id="projectModalBox">
-            <div class="proj-modal-banner">
-                <div class="proj-modal-banner-grid"></div>
-            </div>
-
+        <div class="proj-modal">
+            <div class="proj-modal-banner"><div class="proj-modal-banner-grid"></div></div>
             <div class="proj-modal-body">
                 <div class="proj-modal-header">
                     <div class="proj-modal-title" id="modalTitle">Project Title</div>
                     <button class="proj-modal-close" onclick="closeProjectModal()">&#215;</button>
                 </div>
-
-                <div class="proj-modal-cat" id="modalCat">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="7" width="20" height="14" rx="2"/>
-                        <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
-                    </svg>
-                    Category
-                </div>
-
-                <div class="proj-modal-desc" id="modalDesc">Description here.</div>
-
+                <div class="proj-modal-cat" id="modalCat">Category</div>
+                <div class="proj-modal-desc" id="modalDesc">Description.</div>
                 <div class="proj-modal-stats">
-                    <div class="proj-stat">
-                        <div class="proj-stat-lbl">Budget</div>
-                        <div class="proj-stat-val" id="modalBudget">$0</div>
-                    </div>
-                    <div class="proj-stat">
-                        <div class="proj-stat-lbl">Type</div>
-                        <div class="proj-stat-val">Remote</div>
-                    </div>
-                    <div class="proj-stat">
-                        <div class="proj-stat-lbl">Year</div>
-                        <div class="proj-stat-val" id="modalYear">2024</div>
-                    </div>
+                    <div class="proj-stat"><div class="proj-stat-lbl">Budget</div><div class="proj-stat-val" id="modalBudget">$0</div></div>
+                    <div class="proj-stat"><div class="proj-stat-lbl">Type</div><div class="proj-stat-val">Remote</div></div>
+                    <div class="proj-stat"><div class="proj-stat-lbl">Year</div><div class="proj-stat-val" id="modalYear">2024</div></div>
                 </div>
-
                 <div class="proj-modal-skills-title">Skills &amp; Technologies</div>
                 <div class="proj-modal-skills" id="modalSkills"></div>
-
-                <div class="proj-modal-author">
-                    <div class="proj-modal-author-avatar" id="modalAuthorAvatar">SJ</div>
-                    <div>
-                        <div class="proj-modal-author-lbl">Project by</div>
-                        <div class="proj-modal-author-name" id="modalAuthorName">Author</div>
-                    </div>
-                </div>
-
-                <!-- Modification : Un seul bouton Close quand c'est le propriétaire -->
                 <div class="proj-modal-actions">
-                    <h:panelGroup rendered="#{authBean.connecte and authBean.userConnecte.id == profilBean.user.id}">
-                        <button class="proj-btn-cancel" onclick="closeProjectModal()" style="width: 100%;">
-                            Close
-                        </button>
-                    </h:panelGroup>
-
-                    <h:panelGroup rendered="#{not (authBean.connecte and authBean.userConnecte.id == profilBean.user.id)}">
-                        <button class="proj-btn-cancel" onclick="closeProjectModal()">Close</button>
+                    <button class="proj-btn-cancel" onclick="closeProjectModal()">Close</button>
+                    <h:panelGroup rendered="#{not profilBean.monProfil}">
                         <a href="messagerie.xhtml?destinataire=#{profilBean.user.id}" class="proj-btn-apply">
                             Contact Freelancer
                         </a>
@@ -591,7 +445,7 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 let img = document.querySelector('.avatar-img');
-                const initials = document.getElementById('avatarInitials');
+                const initials = document.querySelector('.avatar-circle span');
                 if (!img) {
                     img = document.createElement('img');
                     img.className = 'avatar-img';
@@ -603,52 +457,31 @@
                 if (initials) initials.style.display = 'none';
             };
             reader.readAsDataURL(file);
-
             const formData = new FormData();
             formData.append('photo', file);
             formData.append('userId', userId);
             fetch('uploadPhoto', { method: 'POST', body: formData })
-                .then(r => {
-                    if (r.ok) {
-                        const toast = document.getElementById('toast');
-                        document.getElementById('toastMsg').textContent = 'Photo sauvegardée !';
-                        toast.classList.add('show');
-                        setTimeout(() => toast.classList.remove('show'), 3500);
-                    }
-                });
+                .then(r => { if (r.ok) location.reload(); });
         }
 
-        /* === Modal Project Functions === */
         function openProjectModal(title, desc, cat, budget, skills, author, year) {
             document.getElementById('modalTitle').textContent = title;
             document.getElementById('modalDesc').textContent = desc;
             document.getElementById('modalBudget').textContent = '$' + budget;
             document.getElementById('modalYear').textContent = year;
-
-            // Catégorie
-            var catEl = document.getElementById('modalCat');
-            catEl.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg> ' + cat;
-
-            // Skills
+            document.getElementById('modalCat').textContent = cat;
             var skillsEl = document.getElementById('modalSkills');
             skillsEl.innerHTML = '';
-            skills.split(',').forEach(function(s) {
-                if (s.trim()) {
-                    var span = document.createElement('span');
-                    span.className = 'proj-modal-skill';
-                    span.textContent = s.trim();
-                    skillsEl.appendChild(span);
-                }
-            });
-
-            // Auteur initiales
-            var parts = author.trim().split(' ');
-            var initials = parts.length >= 2
-                ? (parts[0][0] + parts[1][0]).toUpperCase()
-                : author[0].toUpperCase();
-            document.getElementById('modalAuthorAvatar').textContent = initials;
-            document.getElementById('modalAuthorName').textContent = author;
-
+            if (skills) {
+                skills.split(',').forEach(function(s) {
+                    if (s.trim()) {
+                        var span = document.createElement('span');
+                        span.className = 'proj-modal-skill';
+                        span.textContent = s.trim();
+                        skillsEl.appendChild(span);
+                    }
+                });
+            }
             document.getElementById('projectModal').classList.add('open');
             document.body.style.overflow = 'hidden';
         }

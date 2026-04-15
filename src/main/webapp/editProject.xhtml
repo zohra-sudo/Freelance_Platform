@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Edit Project - Freelance Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #C47D2B; --primary-light: #F5E6D0;
+            --primary-hover: #a8691e; --dark: #1a1a1a;
+            --text: #2d2d2d; --text-muted: #888;
+            --border: #e8e0d5; --bg: #f7f4ef; --white: #fff;
+            --radius: 18px;
+        }
+        body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); padding: 40px; }
+        .container { max-width: 700px; margin: 0 auto; }
+        .card { background: var(--white); border-radius: var(--radius); border: 1px solid #eee; overflow: hidden; }
+        .card-header { padding: 24px 28px; border-bottom: 1px solid var(--border); background: var(--primary-light); }
+        .card-header h1 { font-size: 1.4rem; color: var(--primary); margin: 0; }
+        .card-body { padding: 28px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
+        .form-control { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
+        .form-control:focus { border-color: var(--primary); }
+        textarea.form-control { resize: vertical; min-height: 100px; }
+        .form-actions { display: flex; gap: 15px; margin-top: 30px; }
+        .btn-primary { flex: 1; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-secondary { flex: 1; padding: 14px; background: var(--white); color: var(--text); border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+        .message { padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; }
+        .message-info { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .message-error { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1>#{profilBean.projectEnEdition.id == null ? 'Add a New Project' : 'Edit Project'}</h1>
+            </div>
+            <div class="card-body">
+                <h:messages globalOnly="true" infoClass="message message-info" errorClass="message message-error"/>
+
+                <h:form>
+                    <div class="form-group">
+                        <label>Project Title</label>
+                        <h:inputText value="#{profilBean.projectEnEdition.title}" styleClass="form-control" required="true" requiredMessage="Title is required"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <h:inputTextarea value="#{profilBean.projectEnEdition.description}" styleClass="form-control" rows="4" required="true" requiredMessage="Description is required"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Category</label>
+                        <h:inputText value="#{profilBean.projectEnEdition.category}" styleClass="form-control" required="true" requiredMessage="Category is required"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Budget ($)</label>
+                        <h:inputText value="#{profilBean.projectEnEdition.budget}" styleClass="form-control" required="true" requiredMessage="Budget is required">
+                            <f:convertNumber pattern="#0.00" />
+                        </h:inputText>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Skills (comma separated)</label>
+                        <h:inputText value="#{profilBean.projectEnEdition.skills}" styleClass="form-control" placeholder="React, Node.js, PostgreSQL"/>
+                    </div>
+
+                    <div class="form-actions">
+                        <h:commandButton value="Cancel" styleClass="btn-secondary" action="#{profilBean.annulerEdition}" immediate="true"/>
+                        <h:commandButton value="Save Project" styleClass="btn-primary" action="#{profilBean.sauvegarderProjet}"/>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>

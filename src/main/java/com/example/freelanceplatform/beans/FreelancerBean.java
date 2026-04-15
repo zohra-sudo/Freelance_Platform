@@ -59,6 +59,7 @@ public class FreelancerBean implements Serializable {
         return COLORS[index];
     }
 
+
     // Getters & Setters
     public List<User> getFreelancers() { return freelancers; }
     public void setFreelancers(List<User> freelancers) { this.freelancers = freelancers; }
