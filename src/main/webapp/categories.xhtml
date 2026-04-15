@@ -162,21 +162,73 @@
         .btn-apply-filter { flex: 1; padding: 13px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; }
         .btn-apply-filter:hover { background: var(--primary-hover); }
 
-        /* ── FOOTER ── */
-        .footer-main { background: var(--bg-section); padding: 60px; display: flex; gap: 60px; }
+        /* ── FOOTER (GARDE LES COULEURS D'ORIGINE) ── */
+        .footer-main {
+            background: var(--bg-section);
+            padding: 60px;
+            display: flex;
+            gap: 60px;
+        }
         .footer-brand { flex: 1.5; }
-        .footer-logo { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.5rem; color: var(--primary); margin-bottom: 12px; }
-        .footer-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; margin-bottom: 20px; }
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+        .footer-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            max-width: 300px;
+        }
         .footer-contact { display: flex; flex-direction: column; gap: 8px; }
-        .footer-contact span { color: var(--text-muted); font-size: 0.85rem; display: flex; align-items: center; gap: 8px; }
+        .footer-contact span {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
         .footer-col { flex: 1; }
-        .footer-col h5 { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dark); margin-bottom: 16px; }
-        .footer-col a { display: block; color: var(--text-muted); font-size: 0.88rem; text-decoration: none; margin-bottom: 10px; transition: color 0.2s; }
+        .footer-col h5 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--dark);
+            margin-bottom: 16px;
+        }
+        .footer-col a {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
         .footer-col a:hover { color: var(--primary); }
-        .footer-bottom { background: var(--bg-section); border-top: 1px solid var(--border); padding: 20px 60px; display: flex; justify-content: space-between; align-items: center; }
-        .footer-bottom p { color: var(--text-muted); font-size: 0.82rem; }
+        .footer-bottom {
+            background: var(--bg-section);
+            border-top: 1px solid var(--border);
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer-bottom p {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
         .footer-socials { display: flex; gap: 20px; }
-        .footer-socials a { color: var(--text-muted); font-size: 0.82rem; text-decoration: none; }
+        .footer-socials a {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
         .footer-socials a:hover { color: var(--primary); }
     </style>
 </h:head>
@@ -393,35 +445,29 @@
         </div>
     </div>
 
-    <!-- ══ FOOTER ══ -->
+    <!-- ══ FOOTER (GARDE LES COULEURS D'ORIGINE) ══ -->
     <div class="footer-main">
         <div class="footer-brand">
             <div class="footer-logo">Freelance</div>
             <div class="footer-desc">Connect with exceptional talent worldwide. Build something great together.</div>
             <div class="footer-contact">
                 <span>✉ contact@freelance.com</span>
-                <span>✆ +1 (555) 123-4567</span>
-                <span>⊙ San Francisco, CA</span>
+                <span>✆ 0612345678</span>
+                <span>⊙ Tangier,Morocco</span>
             </div>
         </div>
         <div class="footer-col">
-            <h5>Product</h5>
+            <h5>Platform</h5>
             <a href="jobs.xhtml">Browse Jobs</a>
             <a href="categories.xhtml">Find Talent</a>
             <a href="categories.xhtml">Categories</a>
-        </div>
-        <div class="footer-col">
-            <h5>Company</h5>
-            <a href="#">About Us</a>
-            <a href="#">Careers</a>
-            <a href="#">Blog</a>
-            <a href="#">Contact</a>
         </div>
         <div class="footer-col">
             <h5>Legal</h5>
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>
             <a href="#">Cookie Policy</a>
+            <a href="#">GDPR</a>
         </div>
     </div>
     <div class="footer-bottom">
@@ -430,6 +476,7 @@
             <a href="#">Twitter</a>
             <a href="#">LinkedIn</a>
             <a href="#">Instagram</a>
+            <a href="#">GitHub</a>
         </div>
     </div>
 
