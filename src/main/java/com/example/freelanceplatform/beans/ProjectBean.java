@@ -2,10 +2,10 @@ package com.example.freelanceplatform.beans;
 
 import com.example.freelanceplatform.entities.Project;
 import com.example.freelanceplatform.service.ProjectService;
-import jakarta.enterprise.context.RequestScoped;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-
+import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Named
-@RequestScoped
+@ViewScoped
 public class ProjectBean implements Serializable {
 
     @Inject
@@ -37,6 +37,14 @@ public class ProjectBean implements Serializable {
     public List<Project> getProjects() {
         List<Project> projects = projectService.getAllProjects();
 
+        // 1. INVERSION : On trie par ID du plus grand au plus petit (donc plus récent au plus ancien)
+        if (projects != null) {
+            projects = projects.stream()
+                    .sorted((p1, p2) -> p2.getId().compareTo(p1.getId()))
+                    .collect(Collectors.toList());
+        }
+
+        // --- Reste de ta logique de filtrage (inchangée) ---
         if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
             String keyword = searchKeyword.trim().toLowerCase();
             projects = projects.stream()
@@ -55,6 +63,7 @@ public class ProjectBean implements Serializable {
                     .collect(Collectors.toList());
         }
 
+        // Gestion du "Voir plus" (subList)
         if (!showAll && projects.size() > 4) {
             return projects.subList(0, 4);
         }
@@ -91,7 +100,9 @@ public class ProjectBean implements Serializable {
     }
 
     // --- LOGIQUE DE CRÉATION ---
-
+    public void toggleShowAll() {
+        this.showAll = !this.showAll;
+    }
     public String createProject() {
         // Désormais authBean n'est plus null grâce au @Inject
         if (authBean != null && authBean.isConnecte()) {
@@ -169,6 +180,28 @@ public class ProjectBean implements Serializable {
             return sortedProjects.subList(0, 3);
         }
         return sortedProjects;
+    }
+// --- MÉTHODES À AJOUTER POUR L'ÉDITION ET LA SUPPRESSION ---
+
+    public String goToEditProject(Long id) {
+        // Cette ligne envoie l'ID à editProject.xhtml
+        // Le f:metadata de editProject.xhtml donnera cet ID à EditProjectBean.projectId
+        return "editProject?faces-redirect=true&id=" + id;
+    }
+
+    public String deleteProject(Long id) {
+        // 1. Récupérer le projet pour vérifier l'auteur
+        Project p = projectService.findById(id);
+
+        // 2. Vérification de sécurité stricte : utilisateur connecté ET auteur du projet
+        if (p != null && authBean.isConnecte() &&
+                p.getAuthor().getId().equals(authBean.getUserConnecte().getId())) {
+
+            projectService.deleteProject(id);
+        }
+
+        // 3. Rester sur la page jobs en la rafraîchissant
+        return "jobs?faces-redirect=true";
     }
     // Getters & Setters
     public Project getProject() { return project; }

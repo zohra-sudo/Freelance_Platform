@@ -16,4 +16,8 @@ public class ProjectDAO extends GenericDAO<Project> {
                 .setParameter("userId", userId)
                 .getResultList();
     }
+    public List<Project> findAllRecentFirst() {
+        return em.createQuery("SELECT p FROM Project p ORDER BY p.id DESC", Project.class)
+                .getResultList();
+    }
 }

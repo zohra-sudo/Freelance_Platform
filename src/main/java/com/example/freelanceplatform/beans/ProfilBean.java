@@ -141,6 +141,25 @@ public class ProfilBean implements Serializable {
         }
     }
 
+    public void supprimerProjet(Long id) {
+        if (!isMonProfil()) return;
+
+        try {
+            // 1. On supprime via le service
+            projectService.deleteProject(id);
+
+            // 2. On ajoute un message de succès
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Projet supprimé avec succès", null));
+
+            // 3. REDIRECTION : On recharge la page actuelle avec l'ID pour forcer le rafraîchissement
+            FacesContext.getCurrentInstance().getExternalContext()
+                    .redirect("profil.xhtml?id=" + userId + "&faces-redirect=true");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     // Redirection vers la page d'édition pour modifier un projet existant
     public void editerProjet(Long projectId) {
         try {

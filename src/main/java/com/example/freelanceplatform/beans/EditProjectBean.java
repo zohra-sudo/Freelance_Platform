@@ -25,6 +25,7 @@ public class EditProjectBean implements Serializable {
     private AuthBean authBean;
 
     public void loadProject() {
+        if (projectEnEdition != null) return;
         System.out.println("=== EditProjectBean.loadProject() ===");
         System.out.println("projectId reçu = " + projectId);
 

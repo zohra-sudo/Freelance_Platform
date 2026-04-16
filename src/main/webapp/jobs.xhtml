@@ -635,6 +635,29 @@
                 justify-content: center;
             }
         }
+        .more-actions-container {
+            text-align: right; /* Aligne à droite */
+            margin-top: 20px;
+            padding-right: 10px;
+        }
+
+        .more-link {
+            color: var(--primary); /* Utilise votre couleur beige/dorée */
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;
+            cursor: pointer;
+            padding-bottom: 2px;
+        }
+
+        .more-link:hover {
+            color: var(--primary-hover);
+            border-bottom: 1px solid var(--primary-hover); /* Petit effet de soulignement au survol */
+            opacity: 0.8;
+        }
     </style>
 </h:head>
 
@@ -755,28 +778,8 @@
                         <div class="job-card">
                             <div class="job-card-header">
                                 <div class="job-title">#{p.title}</div>
-
                                 <div class="job-actions-wrapper">
                                     <span class="job-category">#{p.category}</span>
-
-                                    <h:panelGroup rendered="#{not empty authBean.userConnecte}">
-                                        <h:form style="display:inline; margin:0;">
-                                            <button type="button"
-                                                    class="job-menu-btn"
-                                                    onclick="toggleMenu('menu-#{p.id}')">⋮</button>
-
-                                            <div id="menu-#{p.id}" class="job-dropdown" style="display:none;">
-                                                <h:commandLink value="Edit"
-                                                               action="#{projectBean.goToEditProject(p.id)}"
-                                                               styleClass="job-dropdown-item" />
-
-                                                <h:commandButton value="Delete"
-                                                                 action="#{projectBean.deleteProject(p.id)}"
-                                                                 styleClass="job-dropdown-item job-dropdown-delete"
-                                                                 onclick="return confirm('Are you sure you want to delete this project?');" />
-                                            </div>
-                                        </h:form>
-                                    </h:panelGroup>
                                 </div>
                             </div>
 
@@ -797,21 +800,16 @@
                                 <f:param name="id" value="#{p.id}" />
                                 View Details
                             </h:link>
-                        </div>
-                    </ui:repeat>
+                        </div> </ui:repeat>
 
                     <ui:fragment rendered="#{projectBean.hasMoreThanFour}">
-                        <div class="more-actions">
-                            <h:form rendered="#{not projectBean.showAll}">
-                                <h:commandButton value="Voir plus"
-                                                 action="#{projectBean.showMore}"
-                                                 styleClass="post-job-btn" />
-                            </h:form>
-
-                            <h:form rendered="#{projectBean.showAll}">
-                                <h:commandButton value="Voir moins"
-                                                 action="#{projectBean.showLess}"
-                                                 styleClass="clear-btn" />
+                        <div class="more-actions-container">
+                            <h:form id="moreActionsForm">
+                                <h:commandLink value="#{projectBean.showAll ? 'Voir moins' : 'Voir plus'}"
+                                               action="#{projectBean.toggleShowAll}"
+                                               styleClass="more-link">
+                                    <f:ajax render="@all" />
+                                </h:commandLink>
                             </h:form>
                         </div>
                     </ui:fragment>

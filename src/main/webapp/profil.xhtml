@@ -380,7 +380,8 @@
                                 <button type="button" onclick="toggleBioEdit()" class="edit-cancel" style="padding: 5px 15px; font-size: 0.8rem;">Annuler</button>
                                 <h:commandButton value="Enregistrer" action="#{profilBean.updateBio}" styleClass="edit-save"
                                                  style="padding: 5px 15px; font-size: 0.8rem; flex: none; width: auto;">
-                                    <f:ajax execute="@form" render="bioDisplay bioEditArea" onevent="function(data){ if(data.status === 'success') toggleBioEdit(); }"/>
+                                    <f:ajax execute="@form" render="bioDisplay bioEditArea"
+                                            onevent="function(data) { if (data.status === 'success') { document.getElementById('bioForm:bioDisplay').style.display = 'block'; document.getElementById('bioForm:bioEditArea').style.display = 'none'; } }"/>
                                 </h:commandButton>
                             </div>
                         </h:panelGroup>
@@ -461,9 +462,18 @@
                                             onclick="openProjectModal('#{proj.title}', '#{proj.description}', '#{proj.category}', '#{proj.budget}', '#{proj.skills}', '#{profilBean.user.nom}', '2024')">
                                         View Project →
                                     </button>
+
                                     <h:panelGroup rendered="#{profilBean.monProfil}">
-                                        <h:form style="display:inline;">
+                                        <h:form style="display:inline; margin-left: 8px;">
                                             <h:commandButton value="✎ Edit" styleClass="port-edit-btn" action="#{profilBean.editerProjet(proj.id)}"/>
+
+                                            <h:commandButton value="🗑 Delete"
+                                                             styleClass="port-edit-btn"
+                                                             style="color: #dc2626; border-color: rgba(220, 38, 38, 0.2); margin-left: 5px;"
+                                                             action="#{profilBean.supprimerProjet(proj.id)}"
+                                                             onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce projet ?');">
+                                                <f:ajax render="@all" />
+                                            </h:commandButton>
                                         </h:form>
                                     </h:panelGroup>
                                 </div>
@@ -476,9 +486,9 @@
                         </div>
                     </h:panelGroup>
                     <h:panelGroup rendered="#{profilBean.monProfil}">
-                        <h:form>
-                            <h:commandButton styleClass="btn-add-project" value="+ Add a Project" action="#{profilBean.nouveauProjet}"/>
-                        </h:form>
+                        <h:link outcome="creerPoste" styleClass="btn-add-project" style="text-decoration: none;">
+                            + Add a Project
+                        </h:link>
                     </h:panelGroup>
                 </div>
             </div></div>
