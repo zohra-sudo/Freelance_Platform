@@ -342,7 +342,7 @@
 
                         <div class="avatar-circle" style="background: #{profilBean.avatarColor};">
                             <!-- Affichage de la photo si elle existe -->
-                            <h:graphicImage value="/#{profilBean.user.photo}"
+                            <h:graphicImage value="/display/#{profilBean.user.photo}"
                                             styleClass="avatar-img"
                                             rendered="#{not empty profilBean.user.photo}"/>
                             <!-- Initiales si pas de photo -->
@@ -698,8 +698,8 @@
             </a>
         </div>
     </div>
-
     <script>
+        //<![CDATA[
         function uploadPhoto(input, userId) {
             const file = input.files[0];
             if (!file) return;
@@ -722,7 +722,12 @@
             formData.append('photo', file);
             formData.append('userId', userId);
             fetch('uploadPhoto', { method: 'POST', body: formData })
-                .then(r => { if (r.ok) location.reload(); });
+                .then(r => {
+                    if (r.ok) {
+                        // Utilisation de & normale grâce au CDATA
+                        window.location.href = window.location.pathname + "?id=" + userId + "&t=" + new Date().getTime();
+                    }
+                });
         }
 
         function openProjectModal(title, desc, cat, budget, skills, author, year) {
@@ -755,6 +760,7 @@
         function closeIfOutside(e) {
             if (e.target === document.getElementById('projectModal')) closeProjectModal();
         }
+
         function toggleBioEdit() {
             const display = document.getElementById('bioForm:bioDisplay');
             const edit = document.getElementById('bioForm:bioEditArea');
@@ -767,6 +773,7 @@
                 edit.style.display = 'block';
             }
         }
+
         function handleAjaxEvent(data) {
             if (data.status === 'success') {
                 const display = document.getElementById('bioForm:bioDisplay');
@@ -775,11 +782,13 @@
                 edit.style.display = 'none';
             }
         }
+
         function onBioSave(data) {
             if (data.status === 'success') {
                 toggleBioEdit();
             }
         }
+        //]]>
     </script>
 </h:body>
 </html>

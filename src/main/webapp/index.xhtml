@@ -425,8 +425,7 @@
             <h2>What clients are looking for</h2>
             <p>Discover the latest project requests from clients who need your skills</p>
         </div>
-
-        <ui:repeat value="#{projectBean.latestProjectsForHome}" var="job">
+        <ui:repeat value="#{projectBean.latestThreeProjects}" var="job">
             <div class="job-card">
                 <div class="job-card-header">
                     <div class="job-author">

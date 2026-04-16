@@ -38,7 +38,7 @@ public class PhotoUploadServlet extends HttpServlet {
             // --- SÉCURITÉ : VÉRIFICATION DE LA SESSION ---
             HttpSession session = request.getSession();
 
-            // On récupère le bean géré par JSF (généralement stocké sous son nom de classe avec minuscule ou tel que défini par @Named)
+            // On récupère le bean géré par JSF
             AuthBean auth = (AuthBean) session.getAttribute("authBean");
 
             if (auth == null || auth.getUserConnecte() == null) {
@@ -46,7 +46,7 @@ public class PhotoUploadServlet extends HttpServlet {
                 return;
             }
 
-            // On récupère l'utilisateur depuis la session serveur (impossible à truquer par le client)
+            // On récupère l'utilisateur depuis la session serveur
             User userConnecte = auth.getUserConnecte();
             Long userId = userConnecte.getId();
 
@@ -57,9 +57,9 @@ public class PhotoUploadServlet extends HttpServlet {
                 return;
             }
 
-            // Préparation du dossier de stockage
-            String uploadPath = getServletContext().getRealPath("")
-                    + File.separator + "uploads" + File.separator + "photos";
+            // --- MODIFICATION ICI : STOCKAGE PERSISTANT SUR LE PC ---
+            // On crée un dossier "FreelancePhotos" dans ton dossier utilisateur (ex: C:\Users\Salma\FreelancePhotos)
+            String uploadPath = System.getProperty("user.home") + File.separator + "FreelancePhotos";
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
@@ -67,22 +67,22 @@ public class PhotoUploadServlet extends HttpServlet {
 
             // Détermination du nom de fichier unique
             String originalName = filePart.getSubmittedFileName();
-            String extension = "jpg"; // extension par défaut
+            String extension = "jpg";
             if (originalName != null && originalName.contains(".")) {
                 extension = originalName.substring(originalName.lastIndexOf('.') + 1).toLowerCase();
             }
 
-            // On inclut l'ID utilisateur et un UUID pour éviter les conflits de noms
+            // On inclut l'ID utilisateur et un UUID
             String fileName = "user_" + userId + "_" + UUID.randomUUID() + "." + extension;
 
-            // Sauvegarde physique du fichier sur le serveur
+            // Sauvegarde physique du fichier sur ton PC (Hors WildFly)
             try (InputStream input = filePart.getInputStream()) {
                 Files.copy(input, Paths.get(uploadPath, fileName), StandardCopyOption.REPLACE_EXISTING);
             }
 
             // --- MISE À JOUR DE LA BASE DE DONNÉES ---
-            // On met à jour l'objet utilisateur de la session
-            userConnecte.setPhoto("uploads/photos/" + fileName);
+            // On enregistre uniquement le nom du fichier (pour le passer au futur ImageDisplayServlet)
+            userConnecte.setPhoto(fileName);
 
             // Appel au service pour persister en base
             userService.modifierProfil(userConnecte);

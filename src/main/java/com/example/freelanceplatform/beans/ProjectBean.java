@@ -70,6 +70,27 @@ public class ProjectBean implements Serializable {
 
         return projects;
     }
+    // Ajoute cette fonction à la fin de ton ProjectBean, juste avant les getters/setters
+    public List<Project> getLatestThreeProjects() {
+        List<Project> all = projectService.getAllProjects();
+
+        if (all == null || all.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // On crée une copie pour ne pas impacter la liste originale
+        return all.stream()
+                .sorted((p1, p2) -> {
+                    // On trie par ID décroissant (le plus gros ID est le plus récent)
+                    // Ou par createdAt si tu es sûre que le champ est toujours rempli
+                    if (p1.getCreatedAt() != null && p2.getCreatedAt() != null) {
+                        return p2.getCreatedAt().compareTo(p1.getCreatedAt());
+                    }
+                    return p2.getId().compareTo(p1.getId());
+                })
+                .limit(3) // On prend strictement les 3 premiers
+                .collect(Collectors.toList());
+    }
 
     public int getTotalProjectsCount() {
         List<Project> projects = projectService.getAllProjects();
