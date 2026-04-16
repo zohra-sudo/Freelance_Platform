@@ -185,10 +185,18 @@
 
                 <div class="modal-detail-row">
                     <strong>CV (Resume)</strong>
-                    <h:outputText value="View PDF Attached" rendered="#{not empty profilBean.selectedCandidature.freelance.nom}" />
-                    <h:outputText value="None" rendered="#{empty profilBean.selectedCandidature.freelance.nom}" />
-                </div>
+                    <h:panelGroup rendered="#{not empty profilBean.selectedCandidature.cvFile}">
+                        <h:outputLink value="#{request.contextPath}/display/#{profilBean.selectedCandidature.cvFile}"
+                                      target="_blank"
+                                      style="color: #2563EB; font-weight: 600; text-decoration: underline;">
+                            📄 View PDF Attached
+                        </h:outputLink>
+                    </h:panelGroup>
 
+                    <h:outputText value="No CV provided"
+                                  rendered="#{empty profilBean.selectedCandidature.cvFile}"
+                                  style="color: #999; font-style: italic;" />
+                </div>
                 <div class="modal-detail-row">
                     <strong>Phone Number</strong>
                     <h:outputText value="#{not empty profilBean.selectedCandidature.phone ? profilBean.selectedCandidature.phone : 'None'}" />

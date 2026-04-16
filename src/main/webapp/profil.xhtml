@@ -471,7 +471,7 @@
             <div class="card"><div class="card-p">
                 <div class="sec-title">
                     <div class="sec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C47D2B" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div>
-                    Portfolio
+                   Posts
                     <span style="margin-left:auto;font-size:0.78rem;color:var(--text-muted);font-weight:400;">
                         #{profilBean.mesProjets.size()} project(s)
                     </span>
@@ -496,13 +496,16 @@
                                         <h:form style="display:inline; margin-left: 8px;">
                                             <h:commandButton value="✎ Edit" styleClass="port-edit-btn" action="#{profilBean.editerProjet(proj.id)}"/>
 
-                                            <h:commandButton value="🗑 Delete"
-                                                             styleClass="port-edit-btn"
-                                                             style="color: #dc2626; border-color: rgba(220, 38, 38, 0.2); margin-left: 5px;"
-                                                             action="#{profilBean.supprimerProjet(proj.id)}"
-                                                             onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce projet ?');">
-                                                <f:ajax render="@all" />
-                                            </h:commandButton>
+                                            <h:commandLink action="#{profilBean.supprimerProjet(proj.id)}"
+                                                           styleClass="port-edit-btn"
+                                                           style="color: #dc2626; border-color: rgba(220, 38, 38, 0.2); margin-left: 5px; text-decoration: none; display: inline-block;"
+                                                           onclick="if (!confirm('Êtes-vous sûr de vouloir supprimer ce projet ?')) return false;">
+
+                                                <f:setPropertyActionListener value="#{proj.id}" target="#{profilBean.userId}" />
+
+                                                🗑 Delete
+                                                <f:ajax execute="@this" render="@all" />
+                                            </h:commandLink>
                                         </h:form>
                                     </h:panelGroup>
                                 </div>

@@ -61,9 +61,14 @@
                 <h:column>
                     <f:facet name="header">Project</f:facet>
                     <span class="project-title">#{c.project.title}</span>
-                    <h:panelGroup rendered="#{not empty c.project.author}">
-                        <span class="project-category">Posted by #{c.project.author.nom}</span>
-                    </h:panelGroup>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Client</f:facet>
+                    <h:outputText value="#{c.project.author.nom}"
+                                  rendered="#{not empty c.project.author}"
+                                  style="color: #666; font-weight: 500;" />
+                    <h:outputText value="-" rendered="#{empty c.project.author}" />
                 </h:column>
 
                 <h:column>
@@ -76,19 +81,8 @@
                 <h:column>
                     <f:facet name="header">Status</f:facet>
                     <span class="status-badge status-#{c.statut}">
-                        #{c.statut == 'PENDING' ? 'WAITING' : c.statut}
-                    </span>
-                </h:column>
-
-                <h:column>
-                    <f:facet name="header">Details</f:facet>
-                    <h:form>
-                        <h:commandLink action="#{profilBean.selectCandidature(c)}"
-                                       style="color: var(--primary); font-weight: 600; text-decoration: none;">
-                            <f:ajax render="myDetailsModal" />
-                            View Full
-                        </h:commandLink>
-                    </h:form>
+            #{c.statut == 'PENDING' ? 'WAITING' : c.statut}
+        </span>
                 </h:column>
 
             </h:dataTable>

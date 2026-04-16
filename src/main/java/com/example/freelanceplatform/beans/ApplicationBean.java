@@ -67,21 +67,37 @@ public class ApplicationBean implements Serializable {
         if (project == null) return null;
 
         try {
-            // ON REMPLIT L'OBJET CANDIDATURE
+            // --- AJOUT : Sauvegarde du fichier CV ---
+            if (cvFile != null && cvFile.getSize() > 0) {
+                // Crée un nom de fichier unique
+                String originalName = cvFile.getSubmittedFileName();
+                String extension = originalName.substring(originalName.lastIndexOf("."));
+                String uniqueFileName = "cv_" + java.util.UUID.randomUUID().toString() + extension;
+
+                // Définition du dossier (Assure-toi que ce dossier existe sur ton PC)
+                java.io.File uploads = new java.io.File("C:/uploads/");
+                if (!uploads.exists()) uploads.mkdirs();
+
+                // Copie physique du fichier
+                try (java.io.InputStream input = cvFile.getInputStream()) {
+                    java.nio.file.Files.copy(input, new java.io.File(uploads, uniqueFileName).toPath(),
+                            java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                }
+
+                // Enregistrement du nom dans l'entité
+                candidature.setCvFile(uniqueFileName);
+            }
+            // --- FIN AJOUT ---
+
             candidature.setProject(project);
             candidature.setFreelance(currentUser);
             candidature.setStatut("PENDING");
-            candidature.setDatePostulation(new Date());
+            candidature.setDatePostulation(new java.util.Date());
 
-            // On sauvegarde en base de données
             candidatureDAO.save(candidature);
-
             candidatureEnvoyee = true;
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "✓ Candidature envoyée !", null));
-
             return null;
-        } catch (Exception e) {
+        }catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Erreur lors de la soumission", e);
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,

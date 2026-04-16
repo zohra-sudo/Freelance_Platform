@@ -29,7 +29,8 @@ public class Candidature {
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
-
+    @Column(name = "cv_file")
+    private String cvFile;
     // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -57,6 +58,13 @@ public class Candidature {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+    public String getCvFile() {
+        return cvFile;
+    }
+
+    public void setCvFile(String cvFile) {
+        this.cvFile = cvFile;
     }
 
     public String getPortfolioLink() {
