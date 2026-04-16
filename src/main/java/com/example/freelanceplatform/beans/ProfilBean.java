@@ -51,7 +51,7 @@ public class ProfilBean implements Serializable {
     private String nouvelleLangue;
     private String nouvelleCompetence;
     private boolean enTrainDeModifier = false;
-
+    private Candidature selectedCandidature;
     private static final String[] COLORS = {
             "#C47D2B", "#8B5CF6", "#059669", "#DC2626",
             "#2563EB", "#D97706", "#7C3AED", "#0891B2"
@@ -103,6 +103,15 @@ public class ProfilBean implements Serializable {
 
         return allApplications;
     }
+    public void selectCandidature(Candidature c) {
+        this.selectedCandidature = c;
+    }
+
+    public void closeDetails() {
+        this.selectedCandidature = null;
+    }
+
+    public Candidature getSelectedCandidature() { return selectedCandidature; }
 
     public void updateApplicationStatus(Candidature candidature, String newStatus) {
         try {

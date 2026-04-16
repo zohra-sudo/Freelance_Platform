@@ -33,6 +33,55 @@
         .btn-approve { background: #22c55e; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; }
         .btn-reject { background: white; color: #dc2626; border: 1px solid #dc2626; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; }
         .status-badge { font-weight: 700; text-transform: uppercase; font-size: 0.75rem; }
+        .app-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .app-table th {
+            text-align: left;
+            padding: 16px;
+            border-bottom: 2px solid #f7f4ef;
+            color: #888;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .app-table td {
+            padding: 20px 16px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        /* Style des badges de statut pour qu'ils soient beaux */
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .status-PENDING { background: #FFF4E5; color: #B0721B; }
+        .status-ACCEPTED { background: #E6F6EC; color: #2D8A56; }
+        .status-REJECTED { background: #FDEEEE; color: #CB3A3A; }
+
+        .btn-approve { background: #22c55e; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-reject { background: white; color: #dc2626; border: 1px solid #dc2626; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-approve:hover { background: #16a34a; }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 20px; width: 500px;
+            max-height: 80vh; overflow-y: auto; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .close-btn {
+            position: absolute; top: 15px; right: 20px; font-size: 1.5rem;
+            cursor: pointer; color: #888; border: none; background: none;
+        }
+        .modal-detail-row { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .modal-detail-row strong { display: block; color: var(--primary); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 4px; }
     </style>
 </h:head>
 
@@ -64,10 +113,12 @@
                     </h:column>
 
                     <h:column>
-                        <f:facet name="header">Application Details</f:facet>
+                        <f:facet name="header">Details</f:facet>
                         <div style="font-size: 0.85rem; color: #555;">
-                            <strong>Motivation:</strong> #{app.messageMotivation}<br/>
-                            <strong>Phone:</strong> #{app.phone}
+                            <strong>Motivation:</strong>
+                            #{app.messageMotivation.length() > 50 ? app.messageMotivation.substring(0,50).concat('...') : app.messageMotivation}
+                            <br/>
+                            <strong>Phone:</strong> #{not empty app.phone ? app.phone : 'None'}
                         </div>
                     </h:column>
 
@@ -80,24 +131,70 @@
 
                     <h:column>
                         <f:facet name="header">Actions</f:facet>
-                        <h:panelGroup rendered="#{app.statut eq 'PENDING'}">
-                            <h:commandButton value="Approve" action="#{profilBean.updateApplicationStatus(app, 'ACCEPTED')}"
-                                             styleClass="btn-approve" style="margin-right:5px; padding: 6px 12px; font-size: 0.8rem;">
-                                <f:ajax render="appsForm" />
-                            </h:commandButton>
-                            <h:commandButton value="Reject" action="#{profilBean.updateApplicationStatus(app, 'REJECTED')}"
-                                             styleClass="btn-reject" style="padding: 6px 12px; font-size: 0.8rem;">
-                                <f:ajax render="appsForm" />
-                            </h:commandButton>
-                        </h:panelGroup>
+                        <div style="display: flex; gap: 8px; align-items: center;">
 
-                        <h:panelGroup rendered="#{app.statut ne 'PENDING'}">
-                            <span style="color: #999; font-style: italic; font-size: 0.85rem;">Processed</span>
-                        </h:panelGroup>
+                            <h:commandLink styleClass="btn-view" style="color: var(--primary); font-weight: 600; text-decoration: none; font-size: 0.85rem;"
+                                           action="#{profilBean.selectCandidature(app)}">
+                                <f:ajax render="detailsModal" />
+                                View Full
+                            </h:commandLink>
+                            <h:panelGroup rendered="#{app.statut eq 'PENDING'}">
+                                <h:commandButton value="Approve" action="#{profilBean.updateApplicationStatus(app, 'ACCEPTED')}"
+                                                 styleClass="btn-approve" style="padding: 5px 10px; font-size: 0.75rem;">
+                                    <f:ajax render="appsForm" />
+                                </h:commandButton>
+                                <h:commandButton value="Reject" action="#{profilBean.updateApplicationStatus(app, 'REJECTED')}"
+                                                 styleClass="btn-reject" style="padding: 5px 10px; font-size: 0.75rem;">
+                                    <f:ajax render="appsForm" />
+                                </h:commandButton>
+                            </h:panelGroup>
+
+                            <h:panelGroup rendered="#{app.statut ne 'PENDING'}">
+                                <span style="color: #999; font-style: italic; font-size: 0.8rem;">#{app.statut}</span>
+                            </h:panelGroup>
+                        </div>
                     </h:column>
                 </h:dataTable>
             </h:form>
         </div>
     </div>
+    <h:panelGroup id="detailsModal">
+        <h:panelGroup rendered="#{not empty profilBean.selectedCandidature}" styleClass="modal-overlay">
+            <div class="modal-content">
+                <h:form>
+                    <h:commandButton value="×" action="#{profilBean.closeDetails()}" styleClass="close-btn">
+                        <f:ajax render="detailsModal" />
+                    </h:commandButton>
+                </h:form>
+
+                <h2 style="font-family: 'Playfair Display', serif; margin-bottom: 20px;">Application Details</h2>
+
+                <div class="modal-detail-row">
+                    <strong>Full Motivation</strong>
+                    <p style="font-size: 0.95rem; line-height: 1.6;">#{profilBean.selectedCandidature.messageMotivation}</p>
+                </div>
+
+                <div class="modal-detail-row">
+                    <strong>Portfolio Link</strong>
+                    <h:outputLink value="#{profilBean.selectedCandidature.portfolioLink}" target="_blank"
+                                  rendered="#{not empty profilBean.selectedCandidature.portfolioLink}" style="color: var(--primary);">
+                        Click to view portfolio
+                    </h:outputLink>
+                    <h:outputText value="None" rendered="#{empty profilBean.selectedCandidature.portfolioLink}" />
+                </div>
+
+                <div class="modal-detail-row">
+                    <strong>CV (Resume)</strong>
+                    <h:outputText value="View PDF Attached" rendered="#{not empty profilBean.selectedCandidature.freelance.nom}" />
+                    <h:outputText value="None" rendered="#{empty profilBean.selectedCandidature.freelance.nom}" />
+                </div>
+
+                <div class="modal-detail-row">
+                    <strong>Phone Number</strong>
+                    <h:outputText value="#{not empty profilBean.selectedCandidature.phone ? profilBean.selectedCandidature.phone : 'None'}" />
+                </div>
+            </div>
+        </h:panelGroup>
+    </h:panelGroup>
 </h:body>
 </html>
