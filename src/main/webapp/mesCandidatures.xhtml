@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Mes Candidatures | Freelance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        :root { --primary: #C47D2B; --primary-hover: #a8691e; --bg: #fcfaf7; --text: #2d2d2d; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 40px; }
+
+        .container { max-width: 1100px; margin: 0 auto; }
+        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .btn-retour { text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.9rem; }
+
+        .card { background: white; border-radius: 24px; padding: 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.04); border: 1px solid #eee; }
+        h1 { font-size: 1.8rem; margin: 0; color: var(--text); }
+
+        .app-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .app-table th { text-align: left; padding: 16px; border-bottom: 2px solid var(--bg); color: #888; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
+        .app-table td { padding: 16px; border-bottom: 1px solid #f9f9f9; vertical-align: middle; }
+
+        .project-title { font-weight: 700; color: var(--text); display: block; margin-bottom: 4px; }
+        .project-category { font-size: 0.8rem; color: #999; }
+
+        .status-badge { padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
+        .status-PENDING { background: #FFF4E5; color: #B0721B; }
+        .status-ACCEPTED { background: #E6F6EC; color: #2D8A56; }
+        .status-REJECTED { background: #FDEEEE; color: #CB3A3A; }
+
+        .empty-state { text-align: center; padding: 60px; color: #999; }
+    </style>
+</h:head>
+<h:body>
+    <div class="container">
+        <div class="header-section">
+            <h1>Mes Candidatures</h1>
+            <a href="jobs.xhtml" class="btn-retour">← Retour aux offres</a>
+        </div>
+
+        <div class="card">
+            <h:panelGroup rendered="#{empty mesCandidaturesBean.candidatures}">
+                <div class="empty-state">
+                    <p>Vous n'avez pas encore envoyé de candidatures.</p>
+                    <a href="jobs.xhtml" style="color: var(--primary); font-weight: 600;">Découvrir les projets</a>
+                </div>
+            </h:panelGroup>
+
+            <h:dataTable value="#{mesCandidaturesBean.candidatures}" var="c"
+                         rendered="#{not empty mesCandidaturesBean.candidatures}"
+                         styleClass="app-table">
+
+                <h:column>
+                    <f:facet name="header">Projet</f:facet>
+                    <span class="project-title">#{c.project.title}</span>
+                    <h:panelGroup rendered="#{not empty c.project.author}">
+                        <span class="project-category">Posté par #{c.project.author.nom}</span>
+                    </h:panelGroup>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Date d'envoi</f:facet>
+                    <h:outputText value="#{c.datePostulation}">
+                        <f:convertDateTime pattern="dd MMM yyyy" />
+                    </h:outputText>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Statut</f:facet>
+                    <span class="status-badge status-#{c.statut}">
+            #{c.statut == 'PENDING' ? 'EN ATTENTE' : c.statut}
+        </span>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Détails</f:facet>
+                    <h:link outcome="applyProject" style="color: var(--primary); font-weight: 600; text-decoration: none;">
+                        <f:param name="id" value="#{c.project.id}" />
+                        Voir
+                    </h:link>
+                </h:column>
+
+            </h:dataTable>
+        </div>
+    </div>
+</h:body>
+</html>

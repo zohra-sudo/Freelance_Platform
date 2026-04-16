@@ -2,7 +2,7 @@ package com.example.freelanceplatform.service;
 
 import com.example.freelanceplatform.dao.CandidatureDAO;
 import com.example.freelanceplatform.entities.Candidature;
-import com.example.freelanceplatform.entities.Poste;
+import com.example.freelanceplatform.entities.Project;
 import com.example.freelanceplatform.entities.User;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -19,9 +19,9 @@ public class CandidatureService implements Serializable {
     private static final long serialVersionUID = 1L;
 
     // Postuler à un poste
-    public void postuler(Candidature candidature, User freelance, Poste poste) {
+    public void postuler(Candidature candidature, User freelance, Project project) {
         candidature.setFreelance(freelance);
-        candidature.setPoste(poste);
+        candidature.setProject(project);
         candidature.setDatePostulation(new Date());
         candidature.setStatut("EN_ATTENTE");
         candidatureDAO.save(candidature);

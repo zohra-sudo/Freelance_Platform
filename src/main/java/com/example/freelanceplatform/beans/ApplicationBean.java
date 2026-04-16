@@ -1,108 +1,103 @@
 package com.example.freelanceplatform.beans;
 
-import com.example.freelanceplatform.entities.Application;
+import com.example.freelanceplatform.entities.Candidature; // CHANGÉ
 import com.example.freelanceplatform.entities.Project;
-import com.example.freelanceplatform.service.ApplicationService;
+import com.example.freelanceplatform.entities.User;
+import com.example.freelanceplatform.dao.CandidatureDAO; // CHANGÉ
 import com.example.freelanceplatform.service.ProjectService;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.Part;
 
-import java.io.InputStream;
 import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.Date; // AJOUTÉ
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Named
-@RequestScoped
+@ViewScoped
 public class ApplicationBean implements Serializable {
+
+    private static final Logger LOGGER = Logger.getLogger(ApplicationBean.class.getName());
 
     private Long projectId;
     private Project project;
-    private Application application = new Application();
+
+    // ON UTILISE DÉSORMAIS CANDIDATURE (L'entité que le recruteur voit)
+    private Candidature candidature = new Candidature();
 
     private Part cvFile;
+    private boolean candidatureEnvoyee = false;
 
     @Inject
     private ProjectService projectService;
 
     @Inject
-    private ApplicationService applicationService;
+    private CandidatureDAO candidatureDAO; // ON UTILISE LE DAO DE CANDIDATURE
+
+    @Inject
+    private AuthBean authBean;
 
     public void loadProject() {
         if (projectId != null) {
             project = projectService.findById(projectId);
+            if (project != null) {
+                candidature.setProject(project); // LIÉ À CANDIDATURE
+            }
         }
+        candidatureEnvoyee = false;
     }
 
     public String submitApplication() {
+        System.out.println("DEBUG: submitApplication appelé !");
+        if (!authBean.isConnecte()) {
+            return "login?faces-redirect=true";
+        }
 
-        if (projectId == null) {
+        User currentUser = authBean.getUserConnecte();
+
+        // Sécurité : recharger le projet si besoin
+        if (project == null && projectId != null) {
+            project = projectService.findById(projectId);
+        }
+
+        if (project == null) return null;
+
+        try {
+            // ON REMPLIT L'OBJET CANDIDATURE
+            candidature.setProject(project);
+            candidature.setFreelance(currentUser);
+            candidature.setStatut("PENDING");
+            candidature.setDatePostulation(new Date());
+
+            // On sauvegarde en base de données
+            candidatureDAO.save(candidature);
+
+            candidatureEnvoyee = true;
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "✓ Candidature envoyée !", null));
+
             return null;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erreur lors de la soumission", e);
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Erreur lors de l'envoi : " + e.getMessage(), null));
+            return null;  // candidatureEnvoyee reste false → le formulaire reste visible avec le message d'erreur
         }
-
-        Project selectedProject = projectService.findById(projectId);
-        if (selectedProject == null) {
-            return null;
-        }
-
-        application.setProject(selectedProject);
-
-        // 📄 Upload du CV
-        if (cvFile != null && cvFile.getSize() > 0) {
-            try {
-                String fileName = Paths.get(cvFile.getSubmittedFileName()).getFileName().toString();
-
-                String uploadDir = "C:/uploads/"; // ⚠️ change ce chemin si besoin
-                Files.createDirectories(Paths.get(uploadDir));
-
-                InputStream input = cvFile.getInputStream();
-                Files.copy(input, Paths.get(uploadDir + fileName));
-
-                application.setCvFileName(fileName);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        applicationService.save(application);
-
-        return "jobs?faces-redirect=true";
     }
 
-    // ===== GETTERS & SETTERS =====
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    public Application getApplication() {
-        return application;
-    }
-
-    public void setApplication(Application application) {
-        this.application = application;
-    }
-
-    public Part getCvFile() {
-        return cvFile;
-    }
-
-    public void setCvFile(Part cvFile) {
-        this.cvFile = cvFile;
-    }
+    // GETTERS & SETTERS MIS À JOUR
+    public Long getProjectId() { return projectId; }
+    public void setProjectId(Long projectId) { this.projectId = projectId; }
+    public Project getProject() { return project; }
+    public void setProject(Project project) { this.project = project; }
+    public Candidature getCandidature() { return candidature; } // CHANGÉ
+    public void setCandidature(Candidature candidature) { this.candidature = candidature; } // CHANGÉ
+    public Part getCvFile() { return cvFile; }
+    public void setCvFile(Part cvFile) { this.cvFile = cvFile; }
+    public boolean isCandidatureEnvoyee() { return candidatureEnvoyee; }
 }

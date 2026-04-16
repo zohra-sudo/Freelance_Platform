@@ -6,7 +6,13 @@ import java.util.List;
 
 @Stateless
 public class CandidatureDAO extends GenericDAO<Candidature> {
-
+    public List<Candidature> findByRecruiter(Long userId) {
+        return em.createQuery(
+                        "SELECT c FROM Candidature c WHERE c.project.author.id = :userId",
+                        Candidature.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
     public CandidatureDAO() {
         super(Candidature.class);
     }
@@ -20,10 +26,10 @@ public class CandidatureDAO extends GenericDAO<Candidature> {
     }
 
     // Candidatures reçues pour un poste
-    public List<Candidature> findByPoste(Long posteId) {
+    public List<Candidature> findByPoste(Long projectId) {
         return em.createQuery(
-                        "SELECT c FROM Candidature c WHERE c.poste.id = :id", Candidature.class)
-                .setParameter("id", posteId)
+                        "SELECT c FROM Candidature c WHERE c.project.id = :id", Candidature.class)
+                .setParameter("id", projectId)
                 .getResultList();
     }
 }

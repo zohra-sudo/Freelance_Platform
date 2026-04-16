@@ -42,4 +42,5 @@ public class ProjectService {
             projectDAO.delete(project);  // ← passe l'entité
         }
     }
+
 }

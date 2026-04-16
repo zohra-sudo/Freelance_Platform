@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<h:head>
+    <title>Received Applications - Freelance Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        /* On réutilise tes styles de Profil.xhtml */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #C47D2B; --primary-light: #F5E6D0;
+            --primary-hover: #a8691e; --dark: #1a1a1a;
+            --text: #2d2d2d; --text-muted: #888;
+            --border: #e8e0d5; --bg: #f7f4ef; --white: #fff;
+            --radius: 18px;
+        }
+        body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); }
+        nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 60px; background: var(--white); border-bottom: 1px solid var(--border); }
+        .nav-logo { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.6rem; color: var(--primary); text-decoration: none; }
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .card { background: var(--white); border-radius: var(--radius); border: 1px solid #eee; overflow: hidden; padding: 28px; }
+        .page-title { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 30px; color: var(--dark); }
+        .app-item { background: var(--bg); border-radius: 12px; padding: 20px; border: 1.5px solid var(--border); margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px; }
+        .app-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .freelancer-name { font-weight: 700; font-size: 1.1rem; color: var(--dark); }
+        .job-tag { background: var(--primary-light); color: var(--primary); padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; }
+        .motivation-text { color: #555; line-height: 1.6; font-size: 0.95rem; }
+        .actions-row { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-approve { background: #22c55e; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn-reject { background: white; color: #dc2626; border: 1px solid #dc2626; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .status-badge { font-weight: 700; text-transform: uppercase; font-size: 0.75rem; }
+    </style>
+</h:head>
+
+<h:body>
+    <nav>
+        <a href="index.xhtml" class="nav-logo">Freelance</a>
+        <a href="profil.xhtml?id=#{authBean.userConnecte.id}" style="color: var(--primary); text-decoration: none; font-weight: 600;">← Back to Profile</a>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">Received Applications</h1>
+
+        <div class="card">
+            <h:form id="appsForm">
+                <ui:repeat value="#{profilBean.receivedApplications}" var="app">
+                    <div class="application-card">
+                        <div class="app-header">
+                            <div>
+                                <h3 style="font-family: 'Playfair Display', serif; margin-bottom: 5px;">
+                                    #{app.project.title}
+                                </h3>
+                                <span class="job-tag">Candidat: #{app.freelance.nom}</span>
+                            </div>
+                            <span class="status-badge">#{app.statut}</span>
+                        </div>
+
+                        <div class="app-content">
+                            <p><strong>Motivation:</strong> #{app.messageMotivation}</p>
+                            <p><strong>Délai proposé:</strong> #{app.propositionDelai} jours</p>
+                        </div>
+
+                        <div class="app-actions">
+                            <h:panelGroup rendered="#{app.statut eq 'PENDING'}">
+                                <h:commandButton value="Approuver" action="#{profilBean.updateApplicationStatus(app, 'ACCEPTED')}" styleClass="btn-approve">
+                                    <f:ajax render="appsForm" />
+                                </h:commandButton>
+                                <h:commandButton value="Refuser" action="#{profilBean.updateApplicationStatus(app, 'REJECTED')}" styleClass="btn-reject">
+                                    <f:ajax render="appsForm" />
+                                </h:commandButton>
+                            </h:panelGroup>
+
+                            <h:panelGroup rendered="#{app.statut ne 'PENDING'}">
+                                <span class="status-badge">Traitée (#{app.statut})</span>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </ui:repeat>
+
+                <h:panelGroup rendered="#{empty profilBean.receivedApplications}">
+                    <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">
+                        No applications received yet.
+                    </div>
+                </h:panelGroup>
+            </h:form>
+        </div>
+    </div>
+</h:body>
+</html>

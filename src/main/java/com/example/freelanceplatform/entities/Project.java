@@ -4,11 +4,12 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 import java.math.BigDecimal;
-
+import java.util.List;
 @Entity
 @Table(name = "projects")
 public class Project implements Serializable {
-
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+    private List<Candidature> candidatures;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -59,4 +60,11 @@ public class Project implements Serializable {
     public void setAuthor(User author) { this.author = author; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public List<Candidature> getCandidatures() {
+        return candidatures;
+    }
+
+    public void setCandidatures(List<Candidature> candidatures) {
+        this.candidatures = candidatures;
+    }
 }

@@ -15,7 +15,8 @@ public class Candidature {
     private String messageMotivation;
     private Integer propositionDelai;
     private String statut;
-
+    private String phone;
+    private String portfolioLink;
     @Temporal(TemporalType.DATE)
     private Date datePostulation;
 
@@ -26,8 +27,8 @@ public class Candidature {
 
     // Relation : candidature liée à un poste
     @ManyToOne
-    @JoinColumn(name = "poste_id", nullable = false)
-    private Poste poste;
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
 
     // Getters & Setters
     public Long getId() { return id; }
@@ -48,6 +49,22 @@ public class Candidature {
     public User getFreelance() { return freelance; }
     public void setFreelance(User freelance) { this.freelance = freelance; }
 
-    public Poste getPoste() { return poste; }
-    public void setPoste(Poste poste) { this.poste = poste; }
+    public Project getProject() { return project; }
+    public void setProject(Project project) { this.project = project; }
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPortfolioLink() {
+        return portfolioLink;
+    }
+
+    public void setPortfolioLink(String portfolioLink) {
+        this.portfolioLink = portfolioLink;
+    }
+
 }
