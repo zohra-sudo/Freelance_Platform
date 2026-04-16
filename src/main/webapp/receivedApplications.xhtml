@@ -47,45 +47,55 @@
 
         <div class="card">
             <h:form id="appsForm">
-                <ui:repeat value="#{profilBean.receivedApplications}" var="app">
-                    <div class="application-card">
-                        <div class="app-header">
-                            <div>
-                                <h3 style="font-family: 'Playfair Display', serif; margin-bottom: 5px;">
-                                    #{app.project.title}
-                                </h3>
-                                <span class="job-tag">Candidat: #{app.freelance.nom}</span>
-                            </div>
-                            <span class="status-badge">#{app.statut}</span>
-                        </div>
-
-                        <div class="app-content">
-                            <p><strong>Motivation:</strong> #{app.messageMotivation}</p>
-                            <p><strong>Délai proposé:</strong> #{app.propositionDelai} jours</p>
-                        </div>
-
-                        <div class="app-actions">
-                            <h:panelGroup rendered="#{app.statut eq 'PENDING'}">
-                                <h:commandButton value="Approuver" action="#{profilBean.updateApplicationStatus(app, 'ACCEPTED')}" styleClass="btn-approve">
-                                    <f:ajax render="appsForm" />
-                                </h:commandButton>
-                                <h:commandButton value="Refuser" action="#{profilBean.updateApplicationStatus(app, 'REJECTED')}" styleClass="btn-reject">
-                                    <f:ajax render="appsForm" />
-                                </h:commandButton>
-                            </h:panelGroup>
-
-                            <h:panelGroup rendered="#{app.statut ne 'PENDING'}">
-                                <span class="status-badge">Traitée (#{app.statut})</span>
-                            </h:panelGroup>
-                        </div>
-                    </div>
-                </ui:repeat>
-
                 <h:panelGroup rendered="#{empty profilBean.receivedApplications}">
                     <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">
                         No applications received yet.
                     </div>
                 </h:panelGroup>
+
+                <h:dataTable value="#{profilBean.receivedApplications}" var="app"
+                             rendered="#{not empty profilBean.receivedApplications}"
+                             styleClass="app-table" style="width:100%; border-collapse: collapse;">
+
+                    <h:column>
+                        <f:facet name="header">Project &amp; Candidate</f:facet>
+                        <span style="font-weight: 700; display: block;">#{app.project.title}</span>
+                        <span style="font-size: 0.85rem; color: var(--primary); font-weight: 600;">By: #{app.freelance.nom}</span>
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Application Details</f:facet>
+                        <div style="font-size: 0.85rem; color: #555;">
+                            <strong>Motivation:</strong> #{app.messageMotivation}<br/>
+                            <strong>Phone:</strong> #{app.phone}
+                        </div>
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Status</f:facet>
+                        <span class="status-badge status-#{app.statut}">
+                #{app.statut == 'PENDING' ? 'WAITING' : app.statut}
+            </span>
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:panelGroup rendered="#{app.statut eq 'PENDING'}">
+                            <h:commandButton value="Approve" action="#{profilBean.updateApplicationStatus(app, 'ACCEPTED')}"
+                                             styleClass="btn-approve" style="margin-right:5px; padding: 6px 12px; font-size: 0.8rem;">
+                                <f:ajax render="appsForm" />
+                            </h:commandButton>
+                            <h:commandButton value="Reject" action="#{profilBean.updateApplicationStatus(app, 'REJECTED')}"
+                                             styleClass="btn-reject" style="padding: 6px 12px; font-size: 0.8rem;">
+                                <f:ajax render="appsForm" />
+                            </h:commandButton>
+                        </h:panelGroup>
+
+                        <h:panelGroup rendered="#{app.statut ne 'PENDING'}">
+                            <span style="color: #999; font-style: italic; font-size: 0.85rem;">Processed</span>
+                        </h:panelGroup>
+                    </h:column>
+                </h:dataTable>
             </h:form>
         </div>
     </div>

@@ -1,7 +1,9 @@
 package com.example.freelanceplatform.beans;
 import com.example.freelanceplatform.entities.Candidature;
 import java.util.stream.Collectors;
+import com.example.freelanceplatform.dao.CandidatureDAO;
 import com.example.freelanceplatform.entities.Project;
+import com.example.freelanceplatform.entities.Candidature;
 import com.example.freelanceplatform.entities.User;
 import com.example.freelanceplatform.entities.Poste;
 import com.example.freelanceplatform.service.ProjectService;
@@ -36,7 +38,8 @@ public class ProfilBean implements Serializable {
 
     @Inject
     private ProjectService projectService;
-
+    @EJB
+    private CandidatureDAO candidatureDAO;
     @EJB
     private UserDAO userDAO;
 
@@ -103,17 +106,19 @@ public class ProfilBean implements Serializable {
 
     public void updateApplicationStatus(Candidature candidature, String newStatus) {
         try {
-            candidature.setStatut(newStatus);
+            if (candidature != null) {
+                // On change le statut localement
+                candidature.setStatut(newStatus);
 
-            // On sauvegarde le projet qui contient la candidature
-            // Cela mettra à jour le statut dans la table candidatures
-            projectService.updateProject(candidature.getProject());
+                // SÉCURITÉ : On utilise le DAO pour sauver uniquement cette candidature
+                // sans toucher à l'objet Project entier (évite les erreurs de cascade)
+                candidatureDAO.update(candidature);
 
-            String displayMsg = newStatus.equals("ACCEPTED") ? "Application approved!" : "Application rejected.";
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, displayMsg, null));
-
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Status updated to " + newStatus, null));
+            }
         } catch (Exception e) {
+            // En cas d'erreur, on affiche le problème dans la console sans bloquer l'appli
             e.printStackTrace();
         }
     }
