@@ -91,7 +91,13 @@ public class ProjectBean implements Serializable {
                 .limit(3) // On prend strictement les 3 premiers
                 .collect(Collectors.toList());
     }
-
+    public List<String> getAllExistingCategories() {
+        return projectService.getAllProjects().stream()
+                .map(Project::getCategory)
+                .distinct()
+                .filter(c -> c != null && !c.isEmpty())
+                .collect(Collectors.toList());
+    }
     public int getTotalProjectsCount() {
         List<Project> projects = projectService.getAllProjects();
 

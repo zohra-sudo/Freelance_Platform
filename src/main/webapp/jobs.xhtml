@@ -720,44 +720,19 @@
 
         <div class="jobs-layout">
 
-            <!-- CATEGORY -->
             <aside class="sidebar-card">
                 <h3>Category</h3>
 
-                <h:form styleClass="category-form">
-                    <h:commandButton value="Web Development"
-                                     action="#{projectBean.filterByCategory('Web Development')}"
-                                     styleClass="category-btn" />
-                </h:form>
-
-                <h:form styleClass="category-form">
-                    <h:commandButton value="Graphic Design"
-                                     action="#{projectBean.filterByCategory('Graphic Design')}"
-                                     styleClass="category-btn" />
-                </h:form>
-
-                <h:form styleClass="category-form">
-                    <h:commandButton value="Video Editing"
-                                     action="#{projectBean.filterByCategory('Video Editing')}"
-                                     styleClass="category-btn" />
-                </h:form>
-
-                <h:form styleClass="category-form">
-                    <h:commandButton value="Writing"
-                                     action="#{projectBean.filterByCategory('Writing')}"
-                                     styleClass="category-btn" />
-                </h:form>
-
-                <h:form styleClass="category-form">
-                    <h:commandButton value="UI/UX Design"
-                                     action="#{projectBean.filterByCategory('UI/UX Design')}"
-                                     styleClass="category-btn" />
-                </h:form>
+                <ui:repeat value="#{projectBean.allExistingCategories}" var="cat">
+                    <h:form styleClass="category-form">
+                        <h:commandButton value="#{cat}"
+                                         action="#{projectBean.filterByCategory(cat)}"
+                                         styleClass="category-btn" />
+                    </h:form>
+                </ui:repeat>
 
                 <h:form>
-                    <h:commandButton value="Clear Filter"
-                                     action="#{projectBean.clearCategory}"
-                                     styleClass="clear-btn" />
+                    <h:commandButton value="Clear Filter" action="#{projectBean.clearCategory}" styleClass="clear-btn" />
                 </h:form>
             </aside>
 

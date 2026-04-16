@@ -78,13 +78,37 @@ public class FreelancerBean implements Serializable {
         if (availabilityParam != null && !availabilityParam.isEmpty()) {
             selectedAvailability = Arrays.asList(availabilityParam.split(","));
         }
+        allFreelancers = userService.findAll();
+
+        this.availableCategories = allFreelancers.stream()
+                .map(User::getDomaine)
+                .filter(d -> d != null && !d.isEmpty())
+                .distinct() // Pour ne pas avoir 50 fois "Web Development"
+                .sorted()   // Pour un affichage alphabétique propre
+                .collect(Collectors.toList());
+
+        applyFilters();
 
         // Charger et filtrer les données
         loadAndFilter();
     }
 
     private void loadAndFilter() {
-        allFreelancers = userService.findAll();
+        // On filtre TOUT de suite pour exclure les "None" et les domaines vides
+        this.allFreelancers = userService.findAll().stream()
+                .filter(u -> u.getDomaine() != null &&
+                        !u.getDomaine().trim().isEmpty() &&
+                        !u.getDomaine().toLowerCase().contains("none") &&
+                        !u.getDomaine().equals("Other (Specify...)"))
+                .collect(Collectors.toList());
+
+        // 3. INITIALISATION DES CATÉGORIES (Basée sur la liste filtrée ci-dessus)
+        this.availableCategories = allFreelancers.stream()
+                .map(User::getDomaine)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+
         applyFilters();
     }
 
@@ -165,7 +189,9 @@ public class FreelancerBean implements Serializable {
     public List<String> getSelectedAvailability() { return selectedAvailability; }
     public void setSelectedAvailability(List<String> selectedAvailability) { this.selectedAvailability = selectedAvailability; }
 
-    public List<String> getAvailableCategories() { return availableCategories; }
+    public List<String> getAvailableCategories() {
+        return this.availableCategories;
+    }
     public List<String> getAvailableExperience() { return availableExperience; }
     public List<String> getAvailableAvailability() { return availableAvailability; }
 }

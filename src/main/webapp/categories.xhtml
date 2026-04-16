@@ -405,24 +405,7 @@
                         <h:outputText value="Remote" rendered="#{empty user.domaine}"/>
                     </div>
 
-                    <!-- Stats -->
-                    <div class="card-stats">
-                        <div>
-                            <div class="stars">
-                                <span class="star">★</span>
-                                <span class="star">★</span>
-                                <span class="star">★</span>
-                                <span class="star">★</span>
-                                <span class="star-empty">★</span>
-                                <span class="rating-text">4.8</span>
-                                <span class="reviews">(42)</span>
-                            </div>
-                        </div>
-                        <div class="completed">
-                            <div class="completed-label">Completed</div>
-                            <div class="completed-num">--</div>
-                        </div>
-                    </div>
+
 
                     <!-- Bio -->
                     <div class="card-bio">
@@ -454,30 +437,15 @@
 
             <div class="filter-section">
                 <h4>Category</h4>
-                <label class="filter-option">
-                    <input type="checkbox" class="filter-category" value="Web Development" onchange="updateFilterUrl()"/>
-                    <span>Web Development</span>
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" class="filter-category" value="Mobile App" onchange="updateFilterUrl()"/>
-                    <span>Mobile App</span>
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" class="filter-category" value="UI/UX Design" onchange="updateFilterUrl()"/>
-                    <span>UI/UX Design</span>
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" class="filter-category" value="Graphic Design" onchange="updateFilterUrl()"/>
-                    <span>Graphic Design</span>
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" class="filter-category" value="Video Editing" onchange="updateFilterUrl()"/>
-                    <span>Video Editing</span>
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" class="filter-category" value="Digital Marketing" onchange="updateFilterUrl()"/>
-                    <span>Digital Marketing</span>
-                </label>
+                <ui:repeat value="#{freelancerBean.availableCategories}" var="cat">
+                    <label class="filter-option">
+                        <input type="checkbox"
+                               class="filter-category"
+                               value="#{cat}"
+                               onchange="updateFilterUrl()"/>
+                        <span>#{cat}</span>
+                    </label>
+                </ui:repeat>
             </div>
 
             <div class="modal-actions">
