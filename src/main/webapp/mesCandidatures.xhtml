@@ -4,7 +4,7 @@
       xmlns:f="jakarta.faces.core"
       xmlns:ui="jakarta.faces.facelets">
 <h:head>
-    <title>Mes Candidatures | Freelance</title>
+    <title>My Applications | Freelance</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
     <style>
         :root { --primary: #C47D2B; --primary-hover: #a8691e; --bg: #fcfaf7; --text: #2d2d2d; }
@@ -30,20 +30,27 @@
         .status-REJECTED { background: #FDEEEE; color: #CB3A3A; }
 
         .empty-state { text-align: center; padding: 60px; color: #999; }
+
+        /* Styles du Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
+        .modal-content { background: white; padding: 35px; border-radius: 24px; width: 550px; max-height: 85vh; overflow-y: auto; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+        .close-btn { position: absolute; top: 20px; right: 25px; font-size: 1.8rem; cursor: pointer; color: #aaa; border: none; background: none; }
+        .detail-row { margin-bottom: 18px; padding: 12px; background: #f9f9f9; border-radius: 12px; }
+        .detail-row strong { display: block; color: #555; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
     </style>
 </h:head>
 <h:body>
     <div class="container">
         <div class="header-section">
-            <h1>Mes Candidatures</h1>
-            <a href="jobs.xhtml" class="btn-retour">← Retour aux offres</a>
+            <h1>My Applications</h1>
+            <a href="jobs.xhtml" class="btn-retour">← Back to jobs</a>
         </div>
 
         <div class="card">
             <h:panelGroup rendered="#{empty mesCandidaturesBean.candidatures}">
                 <div class="empty-state">
-                    <p>Vous n'avez pas encore envoyé de candidatures.</p>
-                    <a href="jobs.xhtml" style="color: var(--primary); font-weight: 600;">Découvrir les projets</a>
+                    <p>You haven't sent any applications yet.</p>
+                    <a href="jobs.xhtml" style="color: var(--primary); font-weight: 600;">Discover projects</a>
                 </div>
             </h:panelGroup>
 
@@ -52,37 +59,80 @@
                          styleClass="app-table">
 
                 <h:column>
-                    <f:facet name="header">Projet</f:facet>
+                    <f:facet name="header">Project</f:facet>
                     <span class="project-title">#{c.project.title}</span>
                     <h:panelGroup rendered="#{not empty c.project.author}">
-                        <span class="project-category">Posté par #{c.project.author.nom}</span>
+                        <span class="project-category">Posted by #{c.project.author.nom}</span>
                     </h:panelGroup>
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">Date d'envoi</f:facet>
+                    <f:facet name="header">Sent Date</f:facet>
                     <h:outputText value="#{c.datePostulation}">
                         <f:convertDateTime pattern="dd MMM yyyy" />
                     </h:outputText>
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">Statut</f:facet>
+                    <f:facet name="header">Status</f:facet>
                     <span class="status-badge status-#{c.statut}">
-            #{c.statut == 'PENDING' ? 'EN ATTENTE' : c.statut}
-        </span>
+                        #{c.statut == 'PENDING' ? 'WAITING' : c.statut}
+                    </span>
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">Détails</f:facet>
-                    <h:link outcome="applyProject" style="color: var(--primary); font-weight: 600; text-decoration: none;">
-                        <f:param name="id" value="#{c.project.id}" />
-                        Voir
-                    </h:link>
+                    <f:facet name="header">Details</f:facet>
+                    <h:form>
+                        <h:commandLink action="#{profilBean.selectCandidature(c)}"
+                                       style="color: var(--primary); font-weight: 600; text-decoration: none;">
+                            <f:ajax render="myDetailsModal" />
+                            View Full
+                        </h:commandLink>
+                    </h:form>
                 </h:column>
 
             </h:dataTable>
         </div>
     </div>
+
+    <h:panelGroup id="myDetailsModal">
+        <h:panelGroup rendered="#{not empty profilBean.selectedCandidature}" styleClass="modal-overlay">
+            <div class="modal-content">
+                <h:form>
+                    <h:commandButton value="×" action="#{profilBean.closeDetails()}" styleClass="close-btn">
+                        <f:ajax render="myDetailsModal" />
+                    </h:commandButton>
+                </h:form>
+
+                <h2 style="margin-bottom: 25px; color: var(--text);">Application Details</h2>
+
+                <div class="detail-row">
+                    <strong>My Motivation</strong>
+                    <p style="font-size: 0.95rem; line-height: 1.6;">#{profilBean.selectedCandidature.messageMotivation}</p>
+                </div>
+
+                <div class="detail-row">
+                    <strong>Portfolio Link</strong>
+                    <h:outputLink value="#{profilBean.selectedCandidature.portfolioLink}" target="_blank"
+                                  rendered="#{not empty profilBean.selectedCandidature.portfolioLink}" style="color: #2563EB;">
+                        View Portfolio
+                    </h:outputLink>
+                    <h:outputText value="None" rendered="#{empty profilBean.selectedCandidature.portfolioLink}" style="color: #999; font-style: italic;" />
+                </div>
+
+                <div class="detail-row">
+                    <strong>CV (Resume)</strong>
+                    <h:outputText value="Attached Document" rendered="#{not empty profilBean.selectedCandidature.cvFile}" />
+                    <h:outputText value="None" rendered="#{empty profilBean.selectedCandidature.cvFile}" style="color: #999; font-style: italic;" />
+                </div>
+
+                <div class="detail-row">
+                    <strong>Contact Phone</strong>
+                    <h:outputText value="#{not empty profilBean.selectedCandidature.phone ? profilBean.selectedCandidature.phone : 'None'}" />
+                </div>
+            </div>
+        </h:panelGroup>
+    </h:panelGroup>
+
 </h:body>
 </html>
