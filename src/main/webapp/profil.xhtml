@@ -46,10 +46,13 @@
         .banner-word { position: absolute; bottom: 16px; left: 28px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 3.5rem; font-weight: 700; color: rgba(196,125,43,0.12); line-height: 1; user-select: none; }
         .avatar-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: -46px; margin-bottom: 18px; padding: 0 28px; }
         .avatar-wrap { position: relative; cursor: pointer; display: inline-block; }
-        .avatar-circle { width: 90px; height: 90px; border-radius: 50%; border: 4px solid var(--white); box-shadow: 0 6px 20px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700; color: var(--white); overflow: hidden; transition: transform 0.2s; }
+        .avatar-circle { width: 90px; height: 90px; border-radius: 50%; border: 4px solid var(--white); box-shadow: 0 6px 20px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700; color: var(--white); overflow: hidden; transition: transform 0.2s; position: relative; }
         .avatar-wrap:hover .avatar-circle { transform: scale(1.04); }
         .avatar-img { width: 100%; height: 100%; object-fit: cover; }
-        .avatar-hover { position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,0.42); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; gap: 3px; pointer-events: none; }
+        .avatar-hover { position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,0.42); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; gap: 3px; pointer-events: none; cursor: pointer; }
+        .avatar-wrap.can-upload { cursor: pointer; }
+        .avatar-wrap.can-upload .avatar-hover { pointer-events: auto; }
+        .avatar-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         .avatar-wrap:hover .avatar-hover { opacity: 1; }
         .avatar-hover span { color: #fff; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em; }
         .verified-badge { display: inline-flex; align-items: center; gap: 6px; background: #e8f5e9; color: #2e7d32; padding: 7px 16px; border-radius: 50px; font-size: 0.78rem; font-weight: 700; border: 1px solid #c8e6c9; }
@@ -335,11 +338,37 @@
                     <div class="banner-badge"><div class="banner-badge-dot"></div>Open to work</div>
                 </div>
                 <div class="avatar-row">
-                    <div class="avatar-circle" style="background: #{profilBean.avatarColor}; cursor: default;">
-                        <span>#{profilBean.initials}</span>
+                    <div class="avatar-wrap #{profilBean.monProfil ? 'can-upload' : ''}">
+
+                        <div class="avatar-circle" style="background: #{profilBean.avatarColor};">
+                            <!-- Affichage de la photo si elle existe -->
+                            <h:graphicImage value="/#{profilBean.user.photo}"
+                                            styleClass="avatar-img"
+                                            rendered="#{not empty profilBean.user.photo}"/>
+                            <!-- Initiales si pas de photo -->
+                            <span style="#{not empty profilBean.user.photo ? 'display:none;' : ''}">
+                #{profilBean.initials}
+            </span>
+                        </div>
+
+                        <!-- Bouton de changement de photo (visible uniquement pour le propriétaire) -->
+                        <h:panelGroup rendered="#{profilBean.monProfil}">
+                            <div class="avatar-hover" onclick="document.getElementById('photoInput').click()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                                    <circle cx="12" cy="13" r="4"/>
+                                </svg>
+                                <span>CHANGER</span>
+                            </div>
+                            <input type="file" id="photoInput" accept="image/*" style="display:none"
+                                   onchange="uploadPhoto(this, #{profilBean.user.id})"/>
+                        </h:panelGroup>
+
                     </div>
                     <div class="verified-badge">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
                         Verified Profile
                     </div>
                 </div>
