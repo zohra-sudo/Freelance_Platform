@@ -100,4 +100,8 @@ public class ApplicationBean implements Serializable {
     public Part getCvFile() { return cvFile; }
     public void setCvFile(Part cvFile) { this.cvFile = cvFile; }
     public boolean isCandidatureEnvoyee() { return candidatureEnvoyee; }
+    // Ajoute cette méthode dans ApplicationBean.java
+    public void setCandidatureEnvoyee(boolean candidatureEnvoyee) {
+        this.candidatureEnvoyee = candidatureEnvoyee;
+    }
 }
